@@ -7,6 +7,7 @@ import Switch from '@material-ui/core/Switch';
 import { connect } from 'react-redux';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withTranslation } from 'react-i18next';
+import { TextField } from '@material-ui/core';
 import { closeSettings, patchAppInstance } from '../../../actions';
 import Loader from '../../common/Loader';
 
@@ -35,6 +36,10 @@ const styles = theme => ({
 });
 
 class Settings extends Component {
+  state = {
+    initialTime : 0,
+  }
+
   static propTypes = {
     classes: PropTypes.shape({
       paper: PropTypes.string,
@@ -76,11 +81,14 @@ class Settings extends Component {
 
   handleClose = () => {
     const { dispatchCloseSettings } = this.props;
+    const {initialTime } = this.state;
+    this.saveSettings ({ initialTime});
     dispatchCloseSettings();
   };
 
   renderModalContent() {
     const { t, settings, activity } = this.props;
+    // const { initialTime } = this.state;
     const { headerVisible } = settings;
 
     if (activity) {
@@ -97,10 +105,17 @@ class Settings extends Component {
     );
 
     return (
-      <FormControlLabel
-        control={switchControl}
-        label={t('Show Header to Students')}
-      />
+      <>
+        <FormControlLabel
+          control={switchControl}
+          label={t('Show Header to Students')}
+        />
+        <TextField
+          type="Number"
+          // value = {intialTime}
+          onChange={({ target: { value }}) => this.setState( {initialTime: value})}
+        />
+      </>
     );
   }
 
