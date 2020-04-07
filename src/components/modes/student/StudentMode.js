@@ -51,7 +51,7 @@ class StudentMode extends Component {
       case FEEDBACK_VIEW:
       case DEFAULT_VIEW:
       default:
-        return <StudentView />;
+        return <StudentView orientation="horizontal" />;
     }
   }
 }
