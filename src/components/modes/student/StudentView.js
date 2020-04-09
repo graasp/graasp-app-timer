@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Timer from 'react-compound-timer';
-import Paper from '@material-ui/core/Paper';
-import { Typography } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -15,6 +13,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
+import Counter from './Counter';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,19 +24,10 @@ const useStyles = makeStyles(theme => ({
       height: theme.spacing(16),
     },
   },
+  gridRow: {
+    width: '100%',
+  },
 }));
-
-const GridItem = ({ timeValue, timeUnit }) => (
-  <Grid item xs={3} style={{ width: '100%' }}>
-    <Paper variant="outlined" align="center">
-      <Typography variant="h1" color="primary">
-        {timeValue}
-      </Typography>
-      {' '}
-      {timeUnit}
-    </Paper>
-  </Grid>
-);
 
 export const StudentView = ({ t, orientation }) => {
   const [value, setValue] = React.useState('forward');
@@ -56,13 +46,13 @@ export const StudentView = ({ t, orientation }) => {
       >
         {({ start, pause, reset }) => (
           <div className={classes.root}>
-            <Grid container spacing={3} style={{ width: '100%' }}>
+            <Grid className={classes.gridRow} container spacing={3}>
               <Grid item xs={12} align="center">
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Choose Timer Type</FormLabel>
                   <RadioGroup
                     aria-label="selectTimerType"
-                    name="gender1"
+                    name="selectTimerType"
                     value={value}
                     onChange={handleChange}
                   >
@@ -83,16 +73,16 @@ export const StudentView = ({ t, orientation }) => {
               </Grid>
               <Grid item xs={12}>
                 <Grid
+                  className={classes.gridRow}
                   container
                   spacing={3}
-                  style={{ width: '100%' }}
                   direction={direction}
                   alignItems="center"
                 >
-                  <GridItem timeValue={<Timer.Days />} timeUnit={t('days')} />
-                  <GridItem timeValue={<Timer.Hours />} timeUnit="hours" />
-                  <GridItem timeValue={<Timer.Minutes />} timeUnit="minutes" />
-                  <GridItem timeValue={<Timer.Seconds />} timeUnit="seconds" />
+                  <Counter timeValue={<Timer.Days />} timeUnit={t('days')} />
+                  <Counter timeValue={<Timer.Hours />} timeUnit="hours" />
+                  <Counter timeValue={<Timer.Minutes />} timeUnit="minutes" />
+                  <Counter timeValue={<Timer.Seconds />} timeUnit="seconds" />
                 </Grid>
               </Grid>
               <Grid item xs={12} align="center">
@@ -114,11 +104,6 @@ export const StudentView = ({ t, orientation }) => {
   );
 };
 
-GridItem.propTypes = {
-  timeValue: PropTypes.func.isRequired,
-  timeUnit: PropTypes.string.isRequired,
-};
-
 StudentView.defaultProps = {
   orientation: 'horizontal',
 };
@@ -126,10 +111,6 @@ StudentView.defaultProps = {
 StudentView.propTypes = {
   t: PropTypes.func.isRequired,
   orientation: PropTypes.string,
-  classes: PropTypes.shape({
-    main: PropTypes.string,
-    message: PropTypes.string,
-  }).isRequired,
 };
 
 export default withTranslation()(StudentView);
