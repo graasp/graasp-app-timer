@@ -18,7 +18,8 @@ const Counter = ({ timeValue, timeUnit }) => {
       <Paper variant="outlined" align="center">
         <Typography variant="h1" color="primary">
           {timeValue}
-        </Typography>{' '}
+        </Typography>
+        {' '}
         {timeUnit}
       </Paper>
     </Grid>
