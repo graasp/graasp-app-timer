@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Timer from 'react-compound-timer';
-import Paper from '@material-ui/core/Paper';
-import { Typography } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ReplayIcon from '@material-ui/icons/Replay';
@@ -15,9 +13,9 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
+import Counter from './Counter';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     display: 'flex',
     '& > *': {
@@ -26,77 +24,65 @@ const useStyles = makeStyles((theme) => ({
       height: theme.spacing(16),
     },
   },
+  gridRow: {
+    width: '100%',
+  },
 }));
 
-// const timerType = "backward"
-// const startValue = timerType === "forward" ? 0 : 4800000
-
-export const StudentView = ({ t }) => {
+export const StudentView = ({ t, orientation }) => {
   const [value, setValue] = React.useState('forward');
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setValue(event.target.value);
   };
   const classes = useStyles();
+  const direction = orientation === 'vertical' ? 'column' : 'row';
   return (
     <div>
       <Timer
-        initialTime={value === "forward" ? 0 : 4800000}
+        initialTime={value === 'forward' ? 0 : 4800000}
         startImmediately
-
-
         direction={value}
       >
         {({ start, pause, reset }) => (
           <div className={classes.root}>
-            <Grid container spacing={3} style={{width: "100%"}}>
+            <Grid className={classes.gridRow} container spacing={3}>
               <Grid item xs={12} align="center">
                 <FormControl component="fieldset">
                   <FormLabel component="legend">Choose Timer Type</FormLabel>
-                  <RadioGroup aria-label="selectTimerType" name="gender1" value={value} onChange={handleChange}>
-                    <FormControlLabel value="forward" control={<Radio />} label="Count Up" onClick={() => setValue("forward")} />
-                    <FormControlLabel value="backward" control={<Radio />} label="Count Down " onClick={() => setValue("backward")} />
+                  <RadioGroup
+                    aria-label="selectTimerType"
+                    name="selectTimerType"
+                    value={value}
+                    onChange={handleChange}
+                  >
+                    <FormControlLabel
+                      value="forward"
+                      control={<Radio />}
+                      label="Count Up"
+                      onClick={() => setValue('forward')}
+                    />
+                    <FormControlLabel
+                      value="backward"
+                      control={<Radio />}
+                      label="Count Down "
+                      onClick={() => setValue('backward')}
+                    />
                   </RadioGroup>
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
-                <Grid container spacing={3} style={{width: "100%"}}>
-                  <Grid item xs={3}>
-                    <Paper variant="outlined" align="center">
-                      <Typography variant="h1" color="primary">
-                        <Timer.Days />
-                      </Typography>
-                      {' '}
-                      {t('days')}
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Paper variant="outlined" align="center">
-                      <Typography variant="h1" color="primary">
-                        <Timer.Hours />
-                      </Typography>
-                      {' '}
-                      hours
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Paper variant="outlined" align="center">
-                      <Typography variant="h1" color="primary"> 
-                        <Timer.Minutes />
-                      </Typography>
-                      {' '}
-                      minutes
-                    </Paper>
-                  </Grid>
-                  <Grid item xs={3}>
-                    <Paper variant="outlined" align="center">
-                      <Typography variant="h1" color="primary">
-                        <Timer.Seconds />
-                      </Typography>
-                      {' '}
-                      seconds
-                    </Paper>
-                  </Grid>
+                <Grid
+                  className={classes.gridRow}
+                  container
+                  spacing={3}
+                  direction={direction}
+                  alignItems="center"
+                >
+                  <Counter timeValue={<Timer.Days />} timeUnit={t('days')} />
+                  <Counter timeValue={<Timer.Hours />} timeUnit="hours" />
+                  <Counter timeValue={<Timer.Minutes />} timeUnit="minutes" />
+                  <Counter timeValue={<Timer.Seconds />} timeUnit="seconds" />
                 </Grid>
               </Grid>
               <Grid item xs={12} align="center">
@@ -106,9 +92,6 @@ export const StudentView = ({ t }) => {
                 <IconButton aria-label="pause" color="primary" onClick={pause}>
                   <PauseIcon />
                 </IconButton>
-                {/* <IconButton aria-label="Stop" color="primary" onClick={stop}>
-              <StopIcon />
-            </IconButton> */}
                 <IconButton aria-label="Repeat" color="primary" onClick={reset}>
                   <ReplayIcon />
                 </IconButton>
@@ -117,18 +100,17 @@ export const StudentView = ({ t }) => {
           </div>
         )}
       </Timer>
-
-
     </div>
-  )
+  );
+};
+
+StudentView.defaultProps = {
+  orientation: 'horizontal',
 };
 
 StudentView.propTypes = {
   t: PropTypes.func.isRequired,
-  classes: PropTypes.shape({
-    main: PropTypes.string,
-    message: PropTypes.string,
-  }).isRequired,
+  orientation: PropTypes.string,
 };
 
 export default withTranslation()(StudentView);
