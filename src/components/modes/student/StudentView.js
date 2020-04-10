@@ -49,24 +49,29 @@ export const StudentView = ({ t, orientation }) => {
             <Grid className={classes.gridRow} container spacing={3}>
               <Grid item xs={12} align="center">
                 <FormControl component="fieldset">
-                  <FormLabel component="legend">Choose Timer Type</FormLabel>
+                  <FormLabel component="legend">
+                    {t('Choose Timer Type')}
+                  </FormLabel>
                   <RadioGroup
                     aria-label="selectTimerType"
                     name="selectTimerType"
                     value={value}
                     onChange={handleChange}
+                    defaultValue="end"
                   >
                     <FormControlLabel
                       value="forward"
                       control={<Radio />}
-                      label="Count Up"
+                      label={t('Count Up')}
                       onClick={() => setValue('forward')}
+                      labelPlacement="start"
                     />
                     <FormControlLabel
                       value="backward"
                       control={<Radio />}
-                      label="Count Down "
+                      label={t('Count Down')}
                       onClick={() => setValue('backward')}
+                      labelPlacement="start"
                     />
                   </RadioGroup>
                 </FormControl>
@@ -80,9 +85,15 @@ export const StudentView = ({ t, orientation }) => {
                   alignItems="center"
                 >
                   <Counter timeValue={<Timer.Days />} timeUnit={t('days')} />
-                  <Counter timeValue={<Timer.Hours />} timeUnit="hours" />
-                  <Counter timeValue={<Timer.Minutes />} timeUnit="minutes" />
-                  <Counter timeValue={<Timer.Seconds />} timeUnit="seconds" />
+                  <Counter timeValue={<Timer.Hours />} timeUnit={t('hours')} />
+                  <Counter
+                    timeValue={<Timer.Minutes />}
+                    timeUnit={t('minutes')}
+                  />
+                  <Counter
+                    timeValue={<Timer.Seconds />}
+                    timeUnit={t('seconds')}
+                  />
                 </Grid>
               </Grid>
               <Grid item xs={12} align="center">
