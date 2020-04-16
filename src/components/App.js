@@ -24,9 +24,6 @@ export class App extends Component {
     mode: PropTypes.string,
     view: PropTypes.string,
     headerVisible: PropTypes.bool.isRequired,
-    initialTimeValue: PropTypes.number.isRequired,
-    countTimeBackwards: PropTypes.bool.isRequired,
-    verticalOrientation: PropTypes.bool.isRequired,
     ready: PropTypes.bool.isRequired,
     standalone: PropTypes.bool.isRequired,
   };
@@ -70,16 +67,7 @@ export class App extends Component {
   };
 
   render() {
-    const {
-      mode,
-      view,
-      headerVisible,
-      ready,
-      standalone,
-      initialTimeValue,
-      countTimeBackwards,
-      verticalOrientation,
-    } = this.props;
+    const { mode, view, headerVisible, ready, standalone } = this.props;
 
     if (!ready) {
       return <Loader />;
@@ -106,11 +94,7 @@ export class App extends Component {
         return (
           <>
             {headerVisible || standalone ? <Header /> : null}
-            <StudentMode
-              initialTimeValue={initialTimeValue}
-              countTimeBackwards={countTimeBackwards}
-              verticalOrientation={verticalOrientation}
-            />
+            <StudentMode />
           </>
         );
     }
@@ -119,9 +103,6 @@ export class App extends Component {
 
 const mapStateToProps = ({ context, appInstance }) => ({
   headerVisible: appInstance.content.settings.headerVisible,
-  initialTimeValue: appInstance.content.settings.initialTimeValue,
-  countTimeBackwards: appInstance.content.settings.countTimeBackwards,
-  verticalOrientation: appInstance.content.settings.verticalOrientation,
   lang: context.lang,
   mode: context.mode,
   view: context.view,

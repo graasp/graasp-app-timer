@@ -2,16 +2,22 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-import Box from '@material-ui/core/Box';
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormLabel from '@material-ui/core/FormLabel';
+import FormControl from '@material-ui/core/FormControl';
 import Modal from '@material-ui/core/Modal';
 import Switch from '@material-ui/core/Switch';
-import Grid from '@material-ui/core/Grid';
 import { connect } from 'react-redux';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withTranslation } from 'react-i18next';
 import { TextField } from '@material-ui/core';
 import { closeSettings, patchAppInstance } from '../../../actions';
 import Loader from '../../common/Loader';
+import {
+  BACKWARD_DIRECTION,
+  FORWARD_DIRECTION,
+} from '../../../config/settings';
 
 function getModalStyle() {
   const top = 50;
@@ -32,65 +38,29 @@ const styles = theme => ({
     padding: theme.spacing(4),
     outline: 'none',
   },
-  button: {
-    margin: theme.spacing(),
+  formControl: {
+    marginTop: theme.spacing(3),
   },
 });
-
-const AntSwitch = withStyles(theme => ({
-  root: {
-    width: 28,
-    height: 16,
-    padding: 0,
-    display: 'flex',
-  },
-  switchBase: {
-    padding: 2,
-    '&$checked': {
-      transform: 'translateX(12px)',
-      color: theme.palette.common.white,
-      '& + $track': {
-        opacity: 1,
-        backgroundColor: theme.palette.primary.main,
-        borderColor: theme.palette.primary.main,
-      },
-    },
-  },
-  thumb: {
-    width: 12,
-    height: 12,
-    boxShadow: 'none',
-  },
-  track: {
-    borderColor: theme.palette.primary.main,
-    opacity: 1,
-    backgroundColor: theme.palette.primary.main,
-  },
-  checked: {},
-}))(Switch);
 
 class Settings extends Component {
   state = (() => {
     const { settings } = this.props;
-    const {
-      initialTimeValue,
-      countTimeBackwards,
-      verticalOrientation,
-    } = settings;
-    return { initialTimeValue, countTimeBackwards, verticalOrientation };
+    const { initialTimeValue, direction } = settings;
+    return { initialTimeValue, direction };
   })();
 
   static propTypes = {
     classes: PropTypes.shape({
       paper: PropTypes.string,
+      formControl: PropTypes.string,
     }).isRequired,
     open: PropTypes.bool.isRequired,
     activity: PropTypes.bool.isRequired,
     settings: PropTypes.shape({
       headerVisible: PropTypes.bool.isRequired,
       initialTimeValue: PropTypes.number.isRequired,
-      countTimeBackwards: PropTypes.bool.isRequired,
-      verticalOrientation: PropTypes.bool.isRequired,
+      direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -121,33 +91,31 @@ class Settings extends Component {
     this.saveSettings(settingsToChange);
   };
 
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.checked });
+  handleChangeDirection = event => {
+    const {
+      target: { value },
+    } = event;
+    this.setState({ direction: value });
   };
 
   handleClose = () => {
     const { dispatchCloseSettings } = this.props;
-    const {
-      initialTimeValue,
-      countTimeBackwards,
-      verticalOrientation,
-    } = this.state;
+    const { initialTimeValue, direction } = this.state;
     this.saveSettings({
       initialTimeValue,
-      countTimeBackwards,
-      verticalOrientation,
+      direction,
     });
     dispatchCloseSettings();
   };
 
+  handleChangeInitialTimeValue = ({ target: { value } }) => {
+    this.setState({ initialTimeValue: Number(value) });
+  };
+
   renderModalContent() {
-    const { t, settings, activity } = this.props;
+    const { t, settings, activity, classes } = this.props;
     const { headerVisible } = settings;
-    const {
-      initialTimeValue,
-      countTimeBackwards,
-      verticalOrientation,
-    } = this.state;
+    const { initialTimeValue, direction } = this.state;
 
     if (activity) {
       return <Loader />;
@@ -165,47 +133,40 @@ class Settings extends Component {
     return (
       <>
         <FormControlLabel
+          className={classes.formControl}
           control={switchControl}
           label={t('Show Header to Students')}
         />
         <TextField
+          className={classes.formControl}
           type="Number"
           value={initialTimeValue}
-          onChange={({ target: { value } }) =>
-            this.setState({ initialTimeValue: Number(value) })}
+          onChange={this.handleChangeInitialTimeValue}
           label={t('Set counter start time (in seconds)')}
           fullWidth
         />
-        <Typography component="div">
-          <Box lineHeight={4}>
-            <Grid component="label" container alignItems="center" spacing={1}>
-              Timer Type:
-              <Grid item>{t('Count Up')}</Grid>
-              <Grid item>
-                <AntSwitch
-                  checked={countTimeBackwards}
-                  onChange={this.handleChange}
-                  name="countTimeBackwards"
-                />
-              </Grid>
-              <Grid item>{t('Count Down')}</Grid>
-            </Grid>
-          </Box>
-        </Typography>
-        <Typography component="div">
-          <Grid component="label" container alignItems="center" spacing={1}>
-            Orientation:
-            <Grid item>{t('Horizontal')}</Grid>
-            <Grid item>
-              <AntSwitch
-                checked={verticalOrientation}
-                onChange={this.handleChange}
-                name="verticalOrientation"
-              />
-            </Grid>
-            <Grid item>{t('Vertical')}</Grid>
-          </Grid>
-        </Typography>
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend" htmlFor="direction">
+            {t('Timer Type')}
+          </FormLabel>
+          <RadioGroup
+            aria-label={t('direction')}
+            name="direction"
+            value={direction}
+            onChange={this.handleChangeDirection}
+          >
+            <FormControlLabel
+              value={BACKWARD_DIRECTION}
+              control={<Radio />}
+              label={t('Count Down')}
+            />
+            <FormControlLabel
+              value={FORWARD_DIRECTION}
+              control={<Radio />}
+              label={t('Count Up')}
+            />
+          </RadioGroup>
+        </FormControl>
       </>
     );
   }

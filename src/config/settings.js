@@ -15,8 +15,13 @@ try {
 
 export const DEFAULT_API_HOST = defaultApiHost;
 
-// we haven't decided what to call the teacher mode
+// we haven't decided what to call the different modes
 export const TEACHER_MODES = ['teacher', 'producer', 'educator', 'admin'];
+export const STUDENT_MODES = ['student', 'consumer', 'learner'];
 
 export const DEFAULT_VISIBILITY = 'private';
 export const PUBLIC_VISIBILITY = 'public';
+
+export const FORWARD_DIRECTION = 'forward';
+export const BACKWARD_DIRECTION = 'backward';
+export const DEFAULT_DIRECTION = FORWARD_DIRECTION;

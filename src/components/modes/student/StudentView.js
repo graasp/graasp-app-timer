@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { withTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
@@ -9,6 +10,10 @@ import ReplayIcon from '@material-ui/icons/Replay';
 import PauseIcon from '@material-ui/icons/Pause';
 import Grid from '@material-ui/core/Grid';
 import Counter from './Counter';
+import {
+  BACKWARD_DIRECTION,
+  FORWARD_DIRECTION,
+} from '../../../config/settings';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -25,12 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const StudentView = props => {
-  const {
-    t,
-    initialTimeValue,
-    countTimeBackwards,
-    verticalOrientation,
-  } = props;
+  const { t, initialTimeValue, direction, tool } = props;
   const classes = useStyles();
 
   return (
@@ -38,7 +38,7 @@ export const StudentView = props => {
       <Timer
         initialTime={initialTimeValue}
         startImmediately
-        direction={countTimeBackwards ? 'backward' : 'forward'}
+        direction={direction}
       >
         {({ start, pause, reset }) => (
           <div className={classes.root}>
@@ -48,7 +48,7 @@ export const StudentView = props => {
                   className={classes.gridRow}
                   container
                   spacing={3}
-                  direction={verticalOrientation ? 'column' : 'row'}
+                  direction={tool ? 'column' : 'row'}
                   alignItems="center"
                 >
                   <Counter timeValue={<Timer.Days />} timeUnit={t('Days')} />
@@ -85,8 +85,19 @@ export const StudentView = props => {
 StudentView.propTypes = {
   t: PropTypes.func.isRequired,
   initialTimeValue: PropTypes.number.isRequired,
-  countTimeBackwards: PropTypes.bool.isRequired,
-  verticalOrientation: PropTypes.bool.isRequired,
+  direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION])
+    .isRequired,
+  tool: PropTypes.bool.isRequired,
 };
 
-export default withTranslation()(StudentView);
+const mapStateToProps = ({ appInstance, context }) => ({
+  initialTimeValue: appInstance.content.settings.initialTimeValue,
+  direction: appInstance.content.settings.direction,
+  tool: context.tool,
+});
+
+const ConnectedComponent = connect(mapStateToProps)(StudentView);
+
+const TranslatedComponent = withTranslation()(ConnectedComponent);
+
+export default TranslatedComponent;

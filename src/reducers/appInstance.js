@@ -8,12 +8,12 @@ import {
   FLAG_GETTING_APP_INSTANCE,
 } from '../types';
 import { showErrorToast } from '../utils/toasts';
+import { DEFAULT_DIRECTION } from '../config/settings';
 
 const DEFAULT_SETTINGS = {
   headerVisible: false,
   initialTimeValue: 0,
-  countTimeBackwards: false,
-  verticalOrientation: false,
+  direction: DEFAULT_DIRECTION,
 };
 
 const INITIAL_STATE = {
