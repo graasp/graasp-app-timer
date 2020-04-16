@@ -11,6 +11,9 @@ import { showErrorToast } from '../utils/toasts';
 
 const DEFAULT_SETTINGS = {
   headerVisible: false,
+  initialTimeValue: 0,
+  countTimeBackwards: false,
+  verticalOrientation: false,
 };
 
 const INITIAL_STATE = {

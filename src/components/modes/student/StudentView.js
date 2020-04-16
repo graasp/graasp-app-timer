@@ -7,11 +7,6 @@ import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import ReplayIcon from '@material-ui/icons/Replay';
 import PauseIcon from '@material-ui/icons/Pause';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
 import Grid from '@material-ui/core/Grid';
 import Counter from './Counter';
 
@@ -29,70 +24,42 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-export const StudentView = ({ t, orientation }) => {
-  const [value, setValue] = React.useState('forward');
-
-  const handleChange = event => {
-    setValue(event.target.value);
-  };
+export const StudentView = props => {
+  const {
+    t,
+    initialTimeValue,
+    countTimeBackwards,
+    verticalOrientation,
+  } = props;
   const classes = useStyles();
-  const direction = orientation === 'vertical' ? 'column' : 'row';
+
   return (
     <div>
       <Timer
-        initialTime={value === 'forward' ? 0 : 4800000}
+        initialTime={initialTimeValue}
         startImmediately
-        direction={value}
+        direction={countTimeBackwards ? 'backward' : 'forward'}
       >
         {({ start, pause, reset }) => (
           <div className={classes.root}>
             <Grid className={classes.gridRow} container spacing={3}>
-              <Grid item xs={12} align="center">
-                <FormControl component="fieldset">
-                  <FormLabel component="legend">
-                    {t('Choose Timer Type')}
-                  </FormLabel>
-                  <RadioGroup
-                    aria-label="selectTimerType"
-                    name="selectTimerType"
-                    value={value}
-                    onChange={handleChange}
-                    defaultValue="end"
-                  >
-                    <FormControlLabel
-                      value="forward"
-                      control={<Radio />}
-                      label={t('Count Up')}
-                      onClick={() => setValue('forward')}
-                      labelPlacement="start"
-                    />
-                    <FormControlLabel
-                      value="backward"
-                      control={<Radio />}
-                      label={t('Count Down')}
-                      onClick={() => setValue('backward')}
-                      labelPlacement="start"
-                    />
-                  </RadioGroup>
-                </FormControl>
-              </Grid>
               <Grid item xs={12}>
                 <Grid
                   className={classes.gridRow}
                   container
                   spacing={3}
-                  direction={direction}
+                  direction={verticalOrientation ? 'column' : 'row'}
                   alignItems="center"
                 >
-                  <Counter timeValue={<Timer.Days />} timeUnit={t('days')} />
-                  <Counter timeValue={<Timer.Hours />} timeUnit={t('hours')} />
+                  <Counter timeValue={<Timer.Days />} timeUnit={t('Days')} />
+                  <Counter timeValue={<Timer.Hours />} timeUnit={t('Hours')} />
                   <Counter
                     timeValue={<Timer.Minutes />}
-                    timeUnit={t('minutes')}
+                    timeUnit={t('Minutes')}
                   />
                   <Counter
                     timeValue={<Timer.Seconds />}
-                    timeUnit={t('seconds')}
+                    timeUnit={t('Seconds')}
                   />
                 </Grid>
               </Grid>
@@ -115,13 +82,11 @@ export const StudentView = ({ t, orientation }) => {
   );
 };
 
-StudentView.defaultProps = {
-  orientation: 'horizontal',
-};
-
 StudentView.propTypes = {
   t: PropTypes.func.isRequired,
-  orientation: PropTypes.string,
+  initialTimeValue: PropTypes.number.isRequired,
+  countTimeBackwards: PropTypes.bool.isRequired,
+  verticalOrientation: PropTypes.bool.isRequired,
 };
 
 export default withTranslation()(StudentView);
