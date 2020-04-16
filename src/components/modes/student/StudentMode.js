@@ -13,6 +13,9 @@ class StudentMode extends Component {
     activity: PropTypes.number,
     dispatchGetAppInstanceResources: PropTypes.func.isRequired,
     userId: PropTypes.string,
+    initialTimeValue: PropTypes.number.isRequired,
+    countTimeBackwards: PropTypes.bool.isRequired,
+    verticalOrientation: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -43,7 +46,13 @@ class StudentMode extends Component {
   }
 
   render() {
-    const { view, activity } = this.props;
+    const {
+      view,
+      activity,
+      initialTimeValue,
+      countTimeBackwards,
+      verticalOrientation,
+    } = this.props;
     if (activity) {
       return <Loader />;
     }
@@ -51,7 +60,13 @@ class StudentMode extends Component {
       case FEEDBACK_VIEW:
       case DEFAULT_VIEW:
       default:
-        return <StudentView orientation="horizontal" />;
+        return (
+          <StudentView
+            initialTimeValue={initialTimeValue}
+            countTimeBackwards={countTimeBackwards}
+            verticalOrientation={verticalOrientation}
+          />
+        );
     }
   }
 }
