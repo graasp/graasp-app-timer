@@ -116,7 +116,9 @@ class Settings extends Component {
   };
 
   handleChangeInitialTimeValue = ({ target: { value } }) => {
-    this.setState({ initialTimeValue: Number(value) });
+    this.setState({
+      initialTimeValue: Number(value),
+    });
   };
 
   renderModalContent() {
@@ -149,11 +151,11 @@ class Settings extends Component {
           value={initialTimeValue}
           id="outlined-start-adornment"
           onChange={this.handleChangeInitialTimeValue}
-          label={t('Set counter start time (in seconds)')}
+          label={t('Set counter start time')}
           className={clsx(classes.margin, classes.textField)}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">Seconds</InputAdornment>
+              <InputAdornment position="end">Minutes</InputAdornment>
             ),
           }}
           variant="outlined"
@@ -171,12 +173,12 @@ class Settings extends Component {
           >
             <FormControlLabel
               value={BACKWARD_DIRECTION}
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={t('Count Down')}
             />
             <FormControlLabel
               value={FORWARD_DIRECTION}
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={t('Count Up')}
             />
           </RadioGroup>

@@ -32,18 +32,19 @@ const useStyles = makeStyles(theme => ({
 export const StudentView = props => {
   const { t, initialTimeValue, direction, tool } = props;
   const classes = useStyles();
+  const MillSecsToMin = 60;
 
   return (
     <div>
       <Timer
-        initialTime={initialTimeValue}
+        initialTime={initialTimeValue * 60000}
         startImmediately
         direction={direction}
       >
         {({ start, pause, reset }) => (
           <div className={classes.root}>
             <Grid className={classes.gridRow} container spacing={3}>
-              <Grid item xs={12} align="center">
+              <Grid item xs place-content="center">
                 <Grid
                   className={classes.gridRow}
                   container
@@ -51,7 +52,12 @@ export const StudentView = props => {
                   direction={tool ? 'column' : 'row'}
                   alignItems="center"
                 >
-                  <Counter timeValue={<Timer.Hours />} timeUnit={t('Hours')} />
+                  {initialTimeValue > MillSecsToMin && (
+                    <Counter
+                      timeValue={<Timer.Hours />}
+                      timeUnit={t('Hours')}
+                    />
+                  )}
                   <Counter
                     timeValue={<Timer.Minutes />}
                     timeUnit={t('Minutes')}
