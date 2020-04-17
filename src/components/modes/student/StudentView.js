@@ -43,7 +43,7 @@ export const StudentView = props => {
         {({ start, pause, reset }) => (
           <div className={classes.root}>
             <Grid className={classes.gridRow} container spacing={3}>
-              <Grid item xs={12}>
+              <Grid item xs={12} align="center">
                 <Grid
                   className={classes.gridRow}
                   container
@@ -51,7 +51,6 @@ export const StudentView = props => {
                   direction={tool ? 'column' : 'row'}
                   alignItems="center"
                 >
-                  <Counter timeValue={<Timer.Days />} timeUnit={t('Days')} />
                   <Counter timeValue={<Timer.Hours />} timeUnit={t('Hours')} />
                   <Counter
                     timeValue={<Timer.Minutes />}

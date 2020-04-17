@@ -1,21 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableHead from '@material-ui/core/TableHead';
 import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
-import TableRow from '@material-ui/core/TableRow';
-import Typography from '@material-ui/core/Typography';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import DeleteIcon from '@material-ui/icons/Delete';
-import RefreshIcon from '@material-ui/icons/Refresh';
-import Select from 'react-select';
 import { withTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
 import './TeacherView.css';
@@ -26,7 +13,6 @@ import {
   openSettings,
 } from '../../../actions';
 import { getUsers } from '../../../actions/users';
-import { addQueryParamsToUrl } from '../../../utils/url';
 import Settings from './Settings';
 
 /**
@@ -36,54 +22,6 @@ import Settings from './Settings';
  * @param dispatchDeleteAppInstanceResource
  * @returns {*}
  */
-const renderAppInstanceResources = (
-  appInstanceResources,
-  { dispatchPatchAppInstanceResource, dispatchDeleteAppInstanceResource },
-) => {
-  // if there are no resources, show an empty table
-  if (!appInstanceResources.length) {
-    return (
-      <TableRow>
-        <TableCell colSpan={4}>No App Instance Resources</TableCell>
-      </TableRow>
-    );
-  }
-  // map each app instance resource to a row in the table
-  return appInstanceResources.map(({ _id, appInstance, data }) => (
-    <TableRow key={_id}>
-      <TableCell scope="row">{_id}</TableCell>
-      <TableCell>{appInstance}</TableCell>
-      <TableCell>{data.value}</TableCell>
-      <TableCell>
-        <IconButton
-          color="primary"
-          onClick={() => {
-            dispatchPatchAppInstanceResource({
-              id: _id,
-              data: { value: Math.random() },
-            });
-          }}
-        >
-          <RefreshIcon />
-        </IconButton>
-        <IconButton
-          color="primary"
-          onClick={() => dispatchDeleteAppInstanceResource(_id)}
-        >
-          <DeleteIcon />
-        </IconButton>
-      </TableCell>
-    </TableRow>
-  ));
-};
-
-const generateRandomAppInstanceResource = ({
-  dispatchPostAppInstanceResource,
-}) => {
-  dispatchPostAppInstanceResource({
-    data: { value: Math.random() },
-  });
-};
 
 export class TeacherView extends Component {
   static propTypes = {
@@ -98,27 +36,6 @@ export class TeacherView extends Component {
       fab: PropTypes.string,
     }).isRequired,
     dispatchGetUsers: PropTypes.func.isRequired,
-    // inside the shape method you should put the shape
-    // that the resources your app uses will have
-    appInstanceResources: PropTypes.arrayOf(
-      PropTypes.shape({
-        // we need to specify number to avoid warnings with local server
-        _id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-        appInstanceId: PropTypes.string,
-        data: PropTypes.object,
-      }),
-    ),
-    // this is the shape of the select options for students
-    studentOptions: PropTypes.arrayOf(
-      PropTypes.shape({
-        label: PropTypes.string,
-        value: PropTypes.string,
-      }),
-    ).isRequired,
-  };
-
-  static defaultProps = {
-    appInstanceResources: [],
   };
 
   static styles = theme => ({
@@ -151,21 +68,11 @@ export class TeacherView extends Component {
     },
   });
 
-  state = {
-    selectedStudent: null,
-  };
-
   constructor(props) {
     super(props);
     const { dispatchGetUsers } = this.props;
     dispatchGetUsers();
   }
-
-  handleChangeStudent = value => {
-    this.setState({
-      selectedStudent: value,
-    });
-  };
 
   render() {
     // extract properties from the props object
@@ -175,68 +82,10 @@ export class TeacherView extends Component {
       // this property allows us to do translations and is injected by i18next
       t,
       // these properties are injected by the redux mapStateToProps method
-      appInstanceResources,
-      studentOptions,
       dispatchOpenSettings,
     } = this.props;
-    const { selectedStudent } = this.state;
     return (
       <>
-        <Grid container spacing={0}>
-          <Grid item xs={12} className={classes.main}>
-            <Paper className={classes.message}>
-              {t(
-                'This is the teacher view. Switch to the student view by clicking on the URL below.',
-              )}
-              <a href={addQueryParamsToUrl({ mode: 'student' })}>
-                <pre>
-                  {`${window.location.host}/${addQueryParamsToUrl({
-                    mode: 'student',
-                  })}`}
-                </pre>
-              </a>
-            </Paper>
-            <Typography variant="h5" color="inherit">
-              {t('View the Students in the Sample Space')}
-            </Typography>
-            <Select
-              className="StudentSelect"
-              value={selectedStudent}
-              options={studentOptions}
-              onChange={this.handleChangeStudent}
-              isClearable
-            />
-            <hr />
-            <Typography variant="h6" color="inherit">
-              {t(
-                'This table illustrates how an app can save resources on the server.',
-              )}
-            </Typography>
-            <Paper className={classes.root}>
-              <Table className={classes.table}>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>ID</TableCell>
-                    <TableCell>App Instance</TableCell>
-                    <TableCell>Value</TableCell>
-                    <TableCell>Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {renderAppInstanceResources(appInstanceResources, this.props)}
-                </TableBody>
-              </Table>
-            </Paper>
-            <Button
-              color="primary"
-              className={classes.button}
-              variant="contained"
-              onClick={() => generateRandomAppInstanceResource(this.props)}
-            >
-              {t('Save a Random App Instance Resource via the API')}
-            </Button>
-          </Grid>
-        </Grid>
         <Settings />
         <Fab
           color="primary"

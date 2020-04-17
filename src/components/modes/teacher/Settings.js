@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withTranslation } from 'react-i18next';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { closeSettings, patchAppInstance } from '../../../actions';
 import Loader from '../../common/Loader';
 import {
@@ -41,6 +43,9 @@ const styles = theme => ({
   formControl: {
     marginTop: theme.spacing(3),
   },
+  textField: {
+    marginTop: theme.spacing(3),
+  },
 });
 
 class Settings extends Component {
@@ -54,6 +59,8 @@ class Settings extends Component {
     classes: PropTypes.shape({
       paper: PropTypes.string,
       formControl: PropTypes.string,
+      textField: PropTypes.string,
+      margin: PropTypes.number,
     }).isRequired,
     open: PropTypes.bool.isRequired,
     activity: PropTypes.bool.isRequired,
@@ -138,11 +145,18 @@ class Settings extends Component {
           label={t('Show Header to Students')}
         />
         <TextField
-          className={classes.formControl}
           type="Number"
           value={initialTimeValue}
+          id="outlined-start-adornment"
           onChange={this.handleChangeInitialTimeValue}
           label={t('Set counter start time (in seconds)')}
+          className={clsx(classes.margin, classes.textField)}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">Seconds</InputAdornment>
+            ),
+          }}
+          variant="outlined"
           fullWidth
         />
         <FormControl component="fieldset" className={classes.formControl}>
