@@ -52,7 +52,8 @@ class Settings extends Component {
   state = (() => {
     const { settings } = this.props;
     const { initialTimeValue, direction } = settings;
-    return { initialTimeValue, direction };
+    const showError = false;
+    return { initialTimeValue, direction, showError };
   })();
 
   static propTypes = {
@@ -116,15 +117,22 @@ class Settings extends Component {
   };
 
   handleChangeInitialTimeValue = ({ target: { value } }) => {
-    this.setState({
-      initialTimeValue: Number(value),
-    });
+    if (Number(value) < 0) {
+      this.setState({
+        showError: true,
+      });
+    } else {
+      this.setState({
+        initialTimeValue: Number(value),
+        showError: false,
+      });
+    }
   };
 
   renderModalContent() {
     const { t, settings, activity, classes } = this.props;
     const { headerVisible } = settings;
-    const { initialTimeValue, direction } = this.state;
+    const { initialTimeValue, direction, showError } = this.state;
 
     if (activity) {
       return <Loader />;
@@ -149,10 +157,12 @@ class Settings extends Component {
         <TextField
           type="Number"
           value={initialTimeValue}
-          id="outlined-start-adornment"
+          id="initaiTimeValue"
           onChange={this.handleChangeInitialTimeValue}
           label={t('Set counter start time')}
           className={clsx(classes.margin, classes.textField)}
+          error={showError}
+          helperText="Only positive numbers allowed"
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">Minutes</InputAdornment>

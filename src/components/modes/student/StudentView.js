@@ -32,12 +32,13 @@ const useStyles = makeStyles(theme => ({
 export const StudentView = props => {
   const { t, initialTimeValue, direction, tool } = props;
   const classes = useStyles();
-  const MillSecsToMin = 60;
+  const ONE_HOUR_IN_MINS = 60;
+  const ONE_MINUTE_IN_MILLIS = 60000;
 
   return (
     <div>
       <Timer
-        initialTime={initialTimeValue * 60000}
+        initialTime={initialTimeValue * ONE_MINUTE_IN_MILLIS}
         startImmediately
         direction={direction}
       >
@@ -52,7 +53,7 @@ export const StudentView = props => {
                   direction={tool ? 'column' : 'row'}
                   alignItems="center"
                 >
-                  {initialTimeValue > MillSecsToMin && (
+                  {initialTimeValue >= ONE_HOUR_IN_MINS && (
                     <Counter
                       timeValue={<Timer.Hours />}
                       timeUnit={t('Hours')}
