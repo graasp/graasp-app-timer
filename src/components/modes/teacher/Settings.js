@@ -120,6 +120,7 @@ class Settings extends Component {
     if (Number(value) < 0) {
       this.setState({
         showError: true,
+        initialTimeValue: 0,
       });
     } else {
       this.setState({
@@ -157,12 +158,12 @@ class Settings extends Component {
         <TextField
           type="Number"
           value={initialTimeValue}
-          id="initaiTimeValue"
+          id="initialTimeValue"
           onChange={this.handleChangeInitialTimeValue}
           label={t('Set counter start time')}
           className={clsx(classes.margin, classes.textField)}
           error={showError}
-          helperText="Only positive numbers allowed"
+          helperText={t('Only positive numbers allowed')}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">Minutes</InputAdornment>
