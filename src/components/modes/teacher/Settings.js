@@ -12,6 +12,8 @@ import { connect } from 'react-redux';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withTranslation } from 'react-i18next';
 import { TextField } from '@material-ui/core';
+import clsx from 'clsx';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import { closeSettings, patchAppInstance } from '../../../actions';
 import Loader from '../../common/Loader';
 import {
@@ -41,19 +43,25 @@ const styles = theme => ({
   formControl: {
     marginTop: theme.spacing(3),
   },
+  textField: {
+    marginTop: theme.spacing(3),
+  },
 });
 
 class Settings extends Component {
   state = (() => {
     const { settings } = this.props;
     const { initialTimeValue, direction } = settings;
-    return { initialTimeValue, direction };
+    const showError = false;
+    return { initialTimeValue, direction, showError };
   })();
 
   static propTypes = {
     classes: PropTypes.shape({
       paper: PropTypes.string,
       formControl: PropTypes.string,
+      textField: PropTypes.string,
+      margin: PropTypes.number,
     }).isRequired,
     open: PropTypes.bool.isRequired,
     activity: PropTypes.bool.isRequired,
@@ -109,13 +117,23 @@ class Settings extends Component {
   };
 
   handleChangeInitialTimeValue = ({ target: { value } }) => {
-    this.setState({ initialTimeValue: Number(value) });
+    if (Number(value) < 0) {
+      this.setState({
+        showError: true,
+        initialTimeValue: 0,
+      });
+    } else {
+      this.setState({
+        initialTimeValue: Number(value),
+        showError: false,
+      });
+    }
   };
 
   renderModalContent() {
     const { t, settings, activity, classes } = this.props;
     const { headerVisible } = settings;
-    const { initialTimeValue, direction } = this.state;
+    const { initialTimeValue, direction, showError } = this.state;
 
     if (activity) {
       return <Loader />;
@@ -138,11 +156,20 @@ class Settings extends Component {
           label={t('Show Header to Students')}
         />
         <TextField
-          className={classes.formControl}
           type="Number"
           value={initialTimeValue}
+          id="initialTimeValue"
           onChange={this.handleChangeInitialTimeValue}
-          label={t('Set counter start time (in seconds)')}
+          label={t('Set counter start time')}
+          className={clsx(classes.margin, classes.textField)}
+          error={showError}
+          helperText={t('Only positive numbers allowed')}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">Minutes</InputAdornment>
+            ),
+          }}
+          variant="outlined"
           fullWidth
         />
         <FormControl component="fieldset" className={classes.formControl}>
@@ -157,12 +184,12 @@ class Settings extends Component {
           >
             <FormControlLabel
               value={BACKWARD_DIRECTION}
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={t('Count Down')}
             />
             <FormControlLabel
               value={FORWARD_DIRECTION}
-              control={<Radio />}
+              control={<Radio color="primary" />}
               label={t('Count Up')}
             />
           </RadioGroup>

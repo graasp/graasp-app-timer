@@ -14,7 +14,7 @@ const useStyles = makeStyles(() => ({
 const Counter = ({ timeValue, timeUnit }) => {
   const classes = useStyles();
   return (
-    <Grid item xs={3} className={classes.gridRow}>
+    <Grid item xs className={classes.gridRow}>
       <Paper variant="outlined" align="center">
         <Typography variant="h1" color="primary">
           {timeValue}
