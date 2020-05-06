@@ -51,9 +51,9 @@ const styles = theme => ({
 class Settings extends Component {
   state = (() => {
     const { settings } = this.props;
-    const { initialTimeValue, direction } = settings;
+    const { initialTimeValue, direction, timeControlsVisible } = settings;
     const showError = false;
-    return { initialTimeValue, direction, showError };
+    return { initialTimeValue, direction, showError, timeControlsVisible };
   })();
 
   static propTypes = {
@@ -69,6 +69,7 @@ class Settings extends Component {
       headerVisible: PropTypes.bool.isRequired,
       initialTimeValue: PropTypes.number.isRequired,
       direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
+      timeControlsVisible: PropTypes.bool.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -99,6 +100,11 @@ class Settings extends Component {
     this.saveSettings(settingsToChange);
   };
 
+  handleChangeTimeControlVisibility = () => {
+    const { timeControlsVisible } = this.state;
+    this.setState({ timeControlsVisible: !timeControlsVisible });
+  };
+
   handleChangeDirection = event => {
     const {
       target: { value },
@@ -108,10 +114,11 @@ class Settings extends Component {
 
   handleClose = () => {
     const { dispatchCloseSettings } = this.props;
-    const { initialTimeValue, direction } = this.state;
+    const { initialTimeValue, direction, timeControlsVisible } = this.state;
     this.saveSettings({
       initialTimeValue,
       direction,
+      timeControlsVisible,
     });
     dispatchCloseSettings();
   };
@@ -133,18 +140,23 @@ class Settings extends Component {
   renderModalContent() {
     const { t, settings, activity, classes } = this.props;
     const { headerVisible } = settings;
-    const { initialTimeValue, direction, showError } = this.state;
+    const {
+      initialTimeValue,
+      direction,
+      showError,
+      timeControlsVisible,
+    } = this.state;
 
     if (activity) {
       return <Loader />;
     }
 
-    const switchControl = (
+    const switchControl = (checked, onChange, value) => (
       <Switch
         color="primary"
-        checked={headerVisible}
-        onChange={this.handleChangeHeaderVisibility}
-        value="headerVisibility"
+        checked={checked}
+        onChange={onChange}
+        value={value}
       />
     );
 
@@ -152,8 +164,21 @@ class Settings extends Component {
       <>
         <FormControlLabel
           className={classes.formControl}
-          control={switchControl}
+          control={switchControl(
+            headerVisible,
+            this.handleChangeHeaderVisibility,
+            'headerVisibility',
+          )}
           label={t('Show Header to Students')}
+        />
+        <FormControlLabel
+          className={classes.formControl}
+          control={switchControl(
+            timeControlsVisible,
+            this.handleChangeTimeControlVisibility,
+            'timeControlVisibility',
+          )}
+          label={t('Show Time Controls to Students')}
         />
         <TextField
           type="Number"

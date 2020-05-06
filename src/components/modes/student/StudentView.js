@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const StudentView = props => {
-  const { t, initialTimeValue, direction, tool } = props;
+  const { t, initialTimeValue, direction, tool, timeControlsVisible } = props;
   const classes = useStyles();
   const ONE_HOUR_IN_MINS = 60;
   const ONE_MINUTE_IN_MILLIS = 60000;
@@ -69,17 +69,31 @@ export const StudentView = props => {
                   />
                 </Grid>
               </Grid>
-              <Grid item xs={12} align="center">
-                <IconButton aria-label="Start" color="primary" onClick={start}>
-                  <PlayArrowIcon />
-                </IconButton>
-                <IconButton aria-label="pause" color="primary" onClick={pause}>
-                  <PauseIcon />
-                </IconButton>
-                <IconButton aria-label="Repeat" color="primary" onClick={reset}>
-                  <ReplayIcon />
-                </IconButton>
-              </Grid>
+              {timeControlsVisible && (
+                <Grid item xs={12} align="center">
+                  <IconButton
+                    aria-label="Start"
+                    color="primary"
+                    onClick={start}
+                  >
+                    <PlayArrowIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="pause"
+                    color="primary"
+                    onClick={pause}
+                  >
+                    <PauseIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="Repeat"
+                    color="primary"
+                    onClick={reset}
+                  >
+                    <ReplayIcon />
+                  </IconButton>
+                </Grid>
+              )}
             </Grid>
           </div>
         )}
@@ -94,11 +108,13 @@ StudentView.propTypes = {
   direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION])
     .isRequired,
   tool: PropTypes.bool.isRequired,
+  timeControlsVisible: PropTypes.bool.isRequired,
 };
 
 const mapStateToProps = ({ appInstance, context }) => ({
   initialTimeValue: appInstance.content.settings.initialTimeValue,
   direction: appInstance.content.settings.direction,
+  timeControlsVisible: appInstance.content.settings.timeControlsVisible,
   tool: context.tool,
 });
 
