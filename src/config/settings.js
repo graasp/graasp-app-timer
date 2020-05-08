@@ -25,3 +25,5 @@ export const PUBLIC_VISIBILITY = 'public';
 export const FORWARD_DIRECTION = 'forward';
 export const BACKWARD_DIRECTION = 'backward';
 export const DEFAULT_DIRECTION = FORWARD_DIRECTION;
+
+export const SAVE_FREQUENCY_IN_SECONDS = 10;
