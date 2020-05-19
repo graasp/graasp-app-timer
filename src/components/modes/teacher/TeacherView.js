@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Fab from '@material-ui/core/Fab';
 import SettingsIcon from '@material-ui/icons/Settings';
 import { withTranslation } from 'react-i18next';
@@ -10,10 +11,12 @@ import {
   patchAppInstanceResource,
   postAppInstanceResource,
   deleteAppInstanceResource,
+  getUsers,
   openSettings,
 } from '../../../actions';
-import { getUsers } from '../../../actions/users';
+// import { getUsers } from '../../../actions/users';
 import Settings from './Settings';
+import Responses from './Responses';
 
 /**
  * helper method to render the rows of the app instance resource table
@@ -85,7 +88,12 @@ export class TeacherView extends Component {
       dispatchOpenSettings,
     } = this.props;
     return (
-      <>
+      <div>
+        <Grid container spacing={0} className={classes.root}>
+          <Grid item xs={12} className={classes.main}>
+            <Responses />
+          </Grid>
+        </Grid>
         <Settings />
         <Fab
           color="primary"
@@ -95,7 +103,7 @@ export class TeacherView extends Component {
         >
           <SettingsIcon />
         </Fab>
-      </>
+      </div>
     );
   }
 }

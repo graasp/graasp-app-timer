@@ -4,13 +4,11 @@ import { connect } from 'react-redux';
 import StudentView from './StudentView';
 import { DEFAULT_VIEW, FEEDBACK_VIEW } from '../../../config/views';
 import { getAppInstanceResources } from '../../../actions';
-import Loader from '../../common/Loader';
 
 class StudentMode extends Component {
   static propTypes = {
     appInstanceId: PropTypes.string,
     view: PropTypes.string,
-    activity: PropTypes.number,
     dispatchGetAppInstanceResources: PropTypes.func.isRequired,
     userId: PropTypes.string,
   };
@@ -18,16 +16,16 @@ class StudentMode extends Component {
   static defaultProps = {
     view: 'normal',
     appInstanceId: null,
-    activity: 0,
     userId: null,
   };
 
-  constructor(props) {
-    super(props);
-    const { userId } = props;
+  state = { started: false };
+
+  componentDidMount() {
+    const { userId, dispatchGetAppInstanceResources } = this.props;
 
     // get the resources for this user
-    props.dispatchGetAppInstanceResources({ userId });
+    dispatchGetAppInstanceResources({ userId });
   }
 
   componentDidUpdate({ appInstanceId: prevAppInstanceId }) {
@@ -43,24 +41,27 @@ class StudentMode extends Component {
   }
 
   render() {
-    const { view, activity } = this.props;
-    if (activity) {
-      return <Loader />;
-    }
+    const { view } = this.props;
+    const { started } = this.state;
+
     switch (view) {
       case FEEDBACK_VIEW:
       case DEFAULT_VIEW:
       default:
-        return <StudentView />;
+        return (
+          <StudentView
+            handleStart={() => this.setState({ started: true })}
+            started={started}
+          />
+        );
     }
   }
 }
-const mapStateToProps = ({ context, appInstanceResources }) => {
+const mapStateToProps = ({ context }) => {
   const { userId, appInstanceId } = context;
   return {
     userId,
     appInstanceId,
-    activity: appInstanceResources.activity.length,
   };
 };
 

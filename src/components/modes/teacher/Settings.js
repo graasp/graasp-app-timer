@@ -8,6 +8,7 @@ import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import Modal from '@material-ui/core/Modal';
 import Switch from '@material-ui/core/Switch';
+import Tooltip from '@material-ui/core/Tooltip';
 import { connect } from 'react-redux';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import { withTranslation } from 'react-i18next';
@@ -51,9 +52,20 @@ const styles = theme => ({
 class Settings extends Component {
   state = (() => {
     const { settings } = this.props;
-    const { initialTimeValue, direction, timeControlsVisible } = settings;
+    const {
+      initialTimeValue,
+      direction,
+      timeControlsVisible,
+      startImmediately,
+    } = settings;
     const showError = false;
-    return { initialTimeValue, direction, showError, timeControlsVisible };
+    return {
+      initialTimeValue,
+      direction,
+      showError,
+      timeControlsVisible,
+      startImmediately,
+    };
   })();
 
   static propTypes = {
@@ -70,6 +82,7 @@ class Settings extends Component {
       initialTimeValue: PropTypes.number.isRequired,
       direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
       timeControlsVisible: PropTypes.bool.isRequired,
+      startImmediately: PropTypes.bool.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -112,13 +125,24 @@ class Settings extends Component {
     this.setState({ direction: value });
   };
 
+  handleChangeStartImmediately = () => {
+    const { startImmediately } = this.state;
+    this.setState({ startImmediately: !startImmediately });
+  };
+
   handleClose = () => {
     const { dispatchCloseSettings } = this.props;
-    const { initialTimeValue, direction, timeControlsVisible } = this.state;
+    const {
+      initialTimeValue,
+      direction,
+      timeControlsVisible,
+      startImmediately,
+    } = this.state;
     this.saveSettings({
       initialTimeValue,
       direction,
       timeControlsVisible,
+      startImmediately,
     });
     dispatchCloseSettings();
   };
@@ -145,6 +169,7 @@ class Settings extends Component {
       direction,
       showError,
       timeControlsVisible,
+      startImmediately,
     } = this.state;
 
     if (activity) {
@@ -180,6 +205,17 @@ class Settings extends Component {
           )}
           label={t('Show Time Controls to Students')}
         />
+        <Tooltip title="Starting automatically will remove student controls">
+          <FormControlLabel
+            className={classes.formControl}
+            control={switchControl(
+              startImmediately,
+              this.handleChangeStartImmediately,
+              'startImmediately',
+            )}
+            label={t('Start timer automatically')}
+          />
+        </Tooltip>
         <TextField
           type="Number"
           value={initialTimeValue}
