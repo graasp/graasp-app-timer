@@ -65,7 +65,8 @@ class Responses extends Component {
     this.handleToggleConfirmDialog(false)();
   };
 
-  milliToHMS = duration => {
+  // takes millis and outputs hh:mm:ss
+  formatTime = duration => {
     let seconds = parseInt((duration / 1000) % 60, 10);
     let minutes = parseInt((duration / (1000 * 60)) % 60, 10);
     let hours = parseInt((duration / (1000 * 60 * 60)) % 24, 10);
@@ -101,7 +102,7 @@ class Responses extends Component {
             <TableHead>
               <TableRow>
                 <TableCell>{t('Student')}</TableCell>
-                <TableCell>{t('Current Time')}</TableCell>
+                <TableCell>{t('Current Time (HH MM SS)')}</TableCell>
                 <TableCell align="center">{t('Actions')}</TableCell>
               </TableRow>
             </TableHead>
@@ -113,7 +114,7 @@ class Responses extends Component {
                       userContent.find(({ id }) => id === row.userId).name}
                   </TableCell>
                   <TableCell align="left">
-                    {this.milliToHMS(row.time)}
+                    {this.formatTime(row.time)}
                   </TableCell>
                   <TableCell align="center">
                     <IconButton
@@ -127,7 +128,7 @@ class Responses extends Component {
                       open={confirmDialogOpen}
                       title={t('Delete Time')}
                       text={t(
-                        "By clicking 'Delete', you will be deleting students' time. This action cannot be undone.",
+                        "By clicking 'Delete', you will be deleting student's time. This action cannot be undone.",
                       )}
                       handleClose={this.handleToggleConfirmDialog(false)}
                       handleConfirm={() => this.handleConfirmDelete(row.appInstanceId)}

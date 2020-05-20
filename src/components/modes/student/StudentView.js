@@ -60,8 +60,6 @@ export const StudentView = props => {
 
   const startAuto = startImmediately || started;
 
-  // if (!timeControlsVisible)
-
   const initialTime =
     timeResourceData || initialTimeValue * ONE_MINUTE_IN_MILLIS;
 

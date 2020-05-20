@@ -28,14 +28,14 @@ class StudentMode extends Component {
     dispatchGetAppInstanceResources({ userId });
   }
 
-  componentDidUpdate({ appInstanceId: prevAppInstanceId }) {
+  componentDidUpdate({ appInstanceId: prevAppInstanceId, userId: prevUserId }) {
     const {
       appInstanceId,
       dispatchGetAppInstanceResources,
       userId,
     } = this.props;
     // handle receiving the app instance id
-    if (appInstanceId !== prevAppInstanceId) {
+    if (appInstanceId !== prevAppInstanceId || userId !== prevUserId) {
       dispatchGetAppInstanceResources({ userId });
     }
   }

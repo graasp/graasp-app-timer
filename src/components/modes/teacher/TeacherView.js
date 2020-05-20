@@ -14,7 +14,6 @@ import {
   getUsers,
   openSettings,
 } from '../../../actions';
-// import { getUsers } from '../../../actions/users';
 import Settings from './Settings';
 import Responses from './Responses';
 

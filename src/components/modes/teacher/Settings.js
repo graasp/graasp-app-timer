@@ -205,7 +205,11 @@ class Settings extends Component {
           )}
           label={t('Show Time Controls to Students')}
         />
-        <Tooltip title="Starting automatically will remove student controls">
+        <Tooltip
+          title={t(
+            'If the timer does not start automatically and there are no controls, the student will still be able to see a start button.',
+          )}
+        >
           <FormControlLabel
             className={classes.formControl}
             control={switchControl(
