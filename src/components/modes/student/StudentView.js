@@ -46,6 +46,9 @@ export const StudentView = props => {
     dispatchPostAppInstanceResource,
     dispatchPatchAppInstanceResource,
     timeResource,
+    startImmediately,
+    handleStart,
+    started,
   } = props;
   const classes = useStyles();
   const ONE_HOUR_IN_MINS = 60;
@@ -55,12 +58,18 @@ export const StudentView = props => {
   const timeResourceId = timeResource && (timeResource.id || timeResource._id);
   const timeResourceData = timeResourceId ? timeResource.data : null;
 
+  const startAuto = startImmediately || started;
+
   const initialTime =
     timeResourceData || initialTimeValue * ONE_MINUTE_IN_MILLIS;
 
   return (
     <div>
-      <Timer initialTime={initialTime} startImmediately direction={direction}>
+      <Timer
+        initialTime={initialTime}
+        startImmediately={startAuto}
+        direction={direction}
+      >
         {({ start, pause, reset, getTime }) => {
           // save every 10s
           const timeInSeconds = Math.round(getTime() / ONE_SECOND_IN_MILLIS);
@@ -113,15 +122,20 @@ export const StudentView = props => {
                     />
                   </Grid>
                 </Grid>
-                {timeControlsVisible && (
-                  <Grid item xs={12} align="center">
+                <Grid item xs={12} align="center">
+                  {(timeControlsVisible || !startImmediately) && (
                     <IconButton
                       aria-label="Start"
                       color="primary"
-                      onClick={start}
+                      onClick={() => {
+                        start();
+                        handleStart();
+                      }}
                     >
                       <PlayArrowIcon />
                     </IconButton>
+                  )}
+                  {timeControlsVisible && (
                     <IconButton
                       aria-label="pause"
                       color="primary"
@@ -129,6 +143,8 @@ export const StudentView = props => {
                     >
                       <PauseIcon />
                     </IconButton>
+                  )}
+                  {timeControlsVisible && (
                     <IconButton
                       aria-label="Repeat"
                       color="primary"
@@ -136,8 +152,8 @@ export const StudentView = props => {
                     >
                       <ReplayIcon />
                     </IconButton>
-                  </Grid>
-                )}
+                  )}
+                </Grid>
               </Grid>
             </div>
           );
@@ -152,8 +168,11 @@ StudentView.propTypes = {
   initialTimeValue: PropTypes.number.isRequired,
   direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION])
     .isRequired,
+  startImmediately: PropTypes.bool.isRequired,
+  started: PropTypes.bool.isRequired,
   tool: PropTypes.bool.isRequired,
   timeControlsVisible: PropTypes.bool.isRequired,
+  handleStart: PropTypes.func.isRequired,
   dispatchPostAppInstanceResource: PropTypes.func.isRequired,
   dispatchPatchAppInstanceResource: PropTypes.func.isRequired,
   timeResource: PropTypes.shape({
@@ -175,6 +194,7 @@ const mapStateToProps = ({ appInstance, appInstanceResources, context }) => {
     initialTimeValue: appInstance.content.settings.initialTimeValue,
     direction: appInstance.content.settings.direction,
     timeControlsVisible: appInstance.content.settings.timeControlsVisible,
+    startImmediately: appInstance.content.settings.startImmediately,
     tool,
     userId,
     timeResource: appInstanceResources.content.find(({ user, type }) => {

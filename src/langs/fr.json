@@ -5,11 +5,23 @@
     "Welcome to the Graasp App Starter Kit": "Bienvenue dans le kit de démarrage de l'application Graasp",
     "This is the student StudentView": "Ceci est la vue des étudiants.",
     "Choose Timer Type": "Choisissez une minuterie",
+    "Timer Type": "Type de minuterie",
+    "Start timer automatically": "Démarrer la minuterie automatiquement",
     "Count Up": "Compter jusqu à",
     "Count Down": "Compte à rebours",
     "Days": "Journées",
     "Hours": "Heures",
     "Minutes": "Minutes",
-    "Seconds": "Secondes"
+    "Seconds": "Secondes",
+    "Settings": "Paramètres",
+    "Only positive numbers allowed": "Seuls les nombres positifs sont autorisés",
+    "Show Time Controls to Students": "Montrer aux élèves les commandes",
+    "Show Header to Students": "Montrer l'en-tête aux étudiants.",
+    "Set counter start time": "Régler l'heure de début",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Delete Time": "Supprimer le temps enregistré",
+    "": "",
+    "Actions": "Actions Possibles"
   }
 }
