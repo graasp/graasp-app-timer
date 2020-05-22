@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import StudentView from './StudentView';
 import { DEFAULT_VIEW, FEEDBACK_VIEW } from '../../../config/views';
 import { getAppInstanceResources } from '../../../actions';
+import Loader from '../../common/Loader';
 
 class StudentMode extends Component {
   static propTypes = {
@@ -11,6 +12,7 @@ class StudentMode extends Component {
     view: PropTypes.string,
     dispatchGetAppInstanceResources: PropTypes.func.isRequired,
     userId: PropTypes.string,
+    ready: PropTypes.bool.isRequired,
   };
 
   static defaultProps = {
@@ -41,8 +43,12 @@ class StudentMode extends Component {
   }
 
   render() {
-    const { view } = this.props;
+    const { view, ready } = this.props;
     const { started } = this.state;
+
+    if (!ready) {
+      return <Loader />;
+    }
 
     switch (view) {
       case FEEDBACK_VIEW:
@@ -57,11 +63,12 @@ class StudentMode extends Component {
     }
   }
 }
-const mapStateToProps = ({ context }) => {
+const mapStateToProps = ({ context, appInstanceResources }) => {
   const { userId, appInstanceId } = context;
   return {
     userId,
     appInstanceId,
+    ready: appInstanceResources.ready,
   };
 };
 
