@@ -57,6 +57,7 @@ class Settings extends Component {
       direction,
       timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = settings;
     const showError = false;
     return {
@@ -65,6 +66,7 @@ class Settings extends Component {
       showError,
       timeControlsVisible,
       startImmediately,
+      timerVisible,
     };
   })();
 
@@ -83,6 +85,7 @@ class Settings extends Component {
       direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
       timeControlsVisible: PropTypes.bool.isRequired,
       startImmediately: PropTypes.bool.isRequired,
+      timerVisible: PropTypes.bool.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -118,6 +121,11 @@ class Settings extends Component {
     this.setState({ timeControlsVisible: !timeControlsVisible });
   };
 
+  handleChangeTimerVisibility = () => {
+    const { timerVisible } = this.state;
+    this.setState({ timerVisible: !timerVisible });
+  };
+
   handleChangeDirection = event => {
     const {
       target: { value },
@@ -137,12 +145,14 @@ class Settings extends Component {
       direction,
       timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = this.state;
     this.saveSettings({
       initialTimeValue,
       direction,
       timeControlsVisible,
       startImmediately,
+      timerVisible,
     });
     dispatchCloseSettings();
   };
@@ -170,6 +180,7 @@ class Settings extends Component {
       showError,
       timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = this.state;
 
     if (activity) {
@@ -196,6 +207,21 @@ class Settings extends Component {
           )}
           label={t('Show Header to Students')}
         />
+        <Tooltip
+          title={t(
+            'You can add and time student activities without displaying the timer.',
+          )}
+        >
+          <FormControlLabel
+            className={classes.formControl}
+            control={switchControl(
+              timerVisible,
+              this.handleChangeTimerVisibility,
+              'timerVisibility',
+            )}
+            label={t('Hide Entire Timer From Students (stealth mode)')}
+          />
+        </Tooltip>
         <FormControlLabel
           className={classes.formControl}
           control={switchControl(
@@ -217,7 +243,7 @@ class Settings extends Component {
               this.handleChangeStartImmediately,
               'startImmediately',
             )}
-            label={t('Start timer automatically')}
+            label={t('Start Timer Automatically')}
           />
         </Tooltip>
         <TextField

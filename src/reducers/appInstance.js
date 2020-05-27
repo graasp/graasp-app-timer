@@ -16,6 +16,7 @@ const DEFAULT_SETTINGS = {
   direction: DEFAULT_DIRECTION,
   timeControlsVisible: false,
   startImmediately: false,
+  timerVisible: true,
 };
 
 const INITIAL_STATE = {
