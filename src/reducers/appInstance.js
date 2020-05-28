@@ -14,7 +14,6 @@ const DEFAULT_SETTINGS = {
   headerVisible: false,
   initialTimeValue: 0,
   direction: DEFAULT_DIRECTION,
-  timeControlsVisible: false,
   startImmediately: false,
   timerVisible: true,
 };

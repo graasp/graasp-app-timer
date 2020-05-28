@@ -55,7 +55,6 @@ class Settings extends Component {
     const {
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
       timerVisible,
     } = settings;
@@ -64,7 +63,6 @@ class Settings extends Component {
       initialTimeValue,
       direction,
       showError,
-      timeControlsVisible,
       startImmediately,
       timerVisible,
     };
@@ -83,7 +81,6 @@ class Settings extends Component {
       headerVisible: PropTypes.bool.isRequired,
       initialTimeValue: PropTypes.number.isRequired,
       direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
-      timeControlsVisible: PropTypes.bool.isRequired,
       startImmediately: PropTypes.bool.isRequired,
       timerVisible: PropTypes.bool.isRequired,
     }).isRequired,
@@ -116,14 +113,17 @@ class Settings extends Component {
     this.saveSettings(settingsToChange);
   };
 
-  handleChangeTimeControlVisibility = () => {
-    const { timeControlsVisible } = this.state;
-    this.setState({ timeControlsVisible: !timeControlsVisible });
-  };
-
   handleChangeTimerVisibility = () => {
     const { timerVisible } = this.state;
-    this.setState({ timerVisible: !timerVisible });
+    this.setState({ timerVisible: !timerVisible }, () => {
+      if (timerVisible === false) {
+        const settingsToChange = {
+          headerVisible: false,
+        };
+        this.setState({ startImmediately: true });
+        this.saveSettings(settingsToChange);
+      }
+    });
   };
 
   handleChangeDirection = event => {
@@ -143,14 +143,12 @@ class Settings extends Component {
     const {
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
       timerVisible,
     } = this.state;
     this.saveSettings({
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
       timerVisible,
     });
@@ -178,7 +176,6 @@ class Settings extends Component {
       initialTimeValue,
       direction,
       showError,
-      timeControlsVisible,
       startImmediately,
       timerVisible,
     } = this.state;
@@ -200,6 +197,7 @@ class Settings extends Component {
       <>
         <FormControlLabel
           className={classes.formControl}
+          disabled={timerVisible}
           control={switchControl(
             headerVisible,
             this.handleChangeHeaderVisibility,
@@ -222,15 +220,6 @@ class Settings extends Component {
             label={t('Hide Entire Timer From Students (stealth mode)')}
           />
         </Tooltip>
-        <FormControlLabel
-          className={classes.formControl}
-          control={switchControl(
-            timeControlsVisible,
-            this.handleChangeTimeControlVisibility,
-            'timeControlVisibility',
-          )}
-          label={t('Show Time Controls to Students')}
-        />
         <Tooltip
           title={t(
             'If the timer does not start automatically and there are no controls, the student will still be able to see a start button.',
@@ -238,6 +227,7 @@ class Settings extends Component {
         >
           <FormControlLabel
             className={classes.formControl}
+            disabled={timerVisible}
             control={switchControl(
               startImmediately,
               this.handleChangeStartImmediately,

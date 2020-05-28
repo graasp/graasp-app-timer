@@ -41,7 +41,6 @@ export const StudentView = props => {
     direction,
     userId,
     tool,
-    timeControlsVisible,
     timerVisible,
     dispatchPostAppInstanceResource,
     dispatchPatchAppInstanceResource,
@@ -101,13 +100,11 @@ export const StudentView = props => {
           );
 
           return (
-            <div className={classes.root}>
-              <Grid
-                className={classes.gridRow}
-                container
-                spacing={3}
-                style={{ visibility: !timerVisible ? 'visible' : 'hidden' }}
-              >
+            <div
+              style={{ visibility: !timerVisible ? 'visible' : 'hidden' }}
+              className={classes.root}
+            >
+              <Grid className={classes.gridRow} container spacing={3}>
                 <Grid item xs place-content="center">
                   <Grid
                     className={classes.gridRow}
@@ -133,13 +130,17 @@ export const StudentView = props => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} align="center">
-                  {(timeControlsVisible || !startImmediately) && (
+                  {!startImmediately && (
                     <IconButton
                       aria-label="Start"
                       color="primary"
+                      fontSize="large"
                       onClick={() => {
-                        if (started) pause();
-                        else start();
+                        if (started) {
+                          pause();
+                        } else {
+                          start();
+                        }
                         handleStart();
                       }}
                     >
@@ -164,7 +165,6 @@ StudentView.propTypes = {
   startImmediately: PropTypes.bool.isRequired,
   started: PropTypes.bool.isRequired,
   tool: PropTypes.bool.isRequired,
-  timeControlsVisible: PropTypes.bool.isRequired,
   timerVisible: PropTypes.bool.isRequired,
   handleStart: PropTypes.func.isRequired,
   dispatchPostAppInstanceResource: PropTypes.func.isRequired,
@@ -187,7 +187,6 @@ const mapStateToProps = ({ appInstance, appInstanceResources, context }) => {
   return {
     initialTimeValue: appInstance.content.settings.initialTimeValue,
     direction: appInstance.content.settings.direction,
-    timeControlsVisible: appInstance.content.settings.timeControlsVisible,
     timerVisible: appInstance.content.settings.timerVisible,
     startImmediately: appInstance.content.settings.startImmediately,
     tool,
