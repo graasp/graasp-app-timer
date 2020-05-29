@@ -6,7 +6,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Timer from 'react-compound-timer';
 import IconButton from '@material-ui/core/IconButton';
 import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import ReplayIcon from '@material-ui/icons/Replay';
 import PauseIcon from '@material-ui/icons/Pause';
 import Grid from '@material-ui/core/Grid';
 import Counter from './Counter';
@@ -42,7 +41,7 @@ export const StudentView = props => {
     direction,
     userId,
     tool,
-    timeControlsVisible,
+    timerVisible,
     dispatchPostAppInstanceResource,
     dispatchPatchAppInstanceResource,
     timeResource,
@@ -70,7 +69,7 @@ export const StudentView = props => {
         startImmediately={startAuto}
         direction={direction}
       >
-        {({ start, pause, reset, getTime }) => {
+        {({ start, pause, getTime }) => {
           // save every 10s
           const timeInSeconds = Math.round(getTime() / ONE_SECOND_IN_MILLIS);
           const initialTimeInSeconds = initialTime / ONE_SECOND_IN_MILLIS;
@@ -95,8 +94,16 @@ export const StudentView = props => {
               });
             }
           }
+          const TIME_ZERO = 0;
+          const currentHour = Math.floor(
+            getTime() / ONE_MINUTE_IN_MILLIS / ONE_HOUR_IN_MINS,
+          );
+
           return (
-            <div className={classes.root}>
+            <div
+              style={{ visibility: timerVisible ? 'visible' : 'hidden' }}
+              className={classes.root}
+            >
               <Grid className={classes.gridRow} container spacing={3}>
                 <Grid item xs place-content="center">
                   <Grid
@@ -106,7 +113,7 @@ export const StudentView = props => {
                     direction={tool ? 'column' : 'row'}
                     alignItems="center"
                   >
-                    {initialTimeValue >= ONE_HOUR_IN_MINS && (
+                    {currentHour > TIME_ZERO && (
                       <Counter
                         timeValue={<Timer.Hours />}
                         timeUnit={t('Hours')}
@@ -123,34 +130,21 @@ export const StudentView = props => {
                   </Grid>
                 </Grid>
                 <Grid item xs={12} align="center">
-                  {(timeControlsVisible || !startImmediately) && (
+                  {!startImmediately && (
                     <IconButton
                       aria-label="Start"
                       color="primary"
+                      fontSize="large"
                       onClick={() => {
-                        start();
+                        if (started) {
+                          pause();
+                        } else {
+                          start();
+                        }
                         handleStart();
                       }}
                     >
-                      <PlayArrowIcon />
-                    </IconButton>
-                  )}
-                  {timeControlsVisible && (
-                    <IconButton
-                      aria-label="pause"
-                      color="primary"
-                      onClick={pause}
-                    >
-                      <PauseIcon />
-                    </IconButton>
-                  )}
-                  {timeControlsVisible && (
-                    <IconButton
-                      aria-label="Repeat"
-                      color="primary"
-                      onClick={reset}
-                    >
-                      <ReplayIcon />
+                      {started ? <PauseIcon /> : <PlayArrowIcon />}
                     </IconButton>
                   )}
                 </Grid>
@@ -171,7 +165,7 @@ StudentView.propTypes = {
   startImmediately: PropTypes.bool.isRequired,
   started: PropTypes.bool.isRequired,
   tool: PropTypes.bool.isRequired,
-  timeControlsVisible: PropTypes.bool.isRequired,
+  timerVisible: PropTypes.bool.isRequired,
   handleStart: PropTypes.func.isRequired,
   dispatchPostAppInstanceResource: PropTypes.func.isRequired,
   dispatchPatchAppInstanceResource: PropTypes.func.isRequired,
@@ -193,7 +187,7 @@ const mapStateToProps = ({ appInstance, appInstanceResources, context }) => {
   return {
     initialTimeValue: appInstance.content.settings.initialTimeValue,
     direction: appInstance.content.settings.direction,
-    timeControlsVisible: appInstance.content.settings.timeControlsVisible,
+    timerVisible: appInstance.content.settings.timerVisible,
     startImmediately: appInstance.content.settings.startImmediately,
     tool,
     userId,

@@ -42,6 +42,11 @@ class StudentMode extends Component {
     }
   }
 
+  toggleStarted = () => {
+    const { started } = this.state;
+    this.setState({ started: !started });
+  };
+
   render() {
     const { view, ready } = this.props;
     const { started } = this.state;
@@ -55,10 +60,7 @@ class StudentMode extends Component {
       case DEFAULT_VIEW:
       default:
         return (
-          <StudentView
-            handleStart={() => this.setState({ started: true })}
-            started={started}
-          />
+          <StudentView handleStart={this.toggleStarted} started={started} />
         );
     }
   }

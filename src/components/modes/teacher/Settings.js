@@ -55,16 +55,16 @@ class Settings extends Component {
     const {
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = settings;
     const showError = false;
     return {
       initialTimeValue,
       direction,
       showError,
-      timeControlsVisible,
       startImmediately,
+      timerVisible,
     };
   })();
 
@@ -81,8 +81,8 @@ class Settings extends Component {
       headerVisible: PropTypes.bool.isRequired,
       initialTimeValue: PropTypes.number.isRequired,
       direction: PropTypes.oneOf([BACKWARD_DIRECTION, FORWARD_DIRECTION]),
-      timeControlsVisible: PropTypes.bool.isRequired,
       startImmediately: PropTypes.bool.isRequired,
+      timerVisible: PropTypes.bool.isRequired,
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -113,9 +113,18 @@ class Settings extends Component {
     this.saveSettings(settingsToChange);
   };
 
-  handleChangeTimeControlVisibility = () => {
-    const { timeControlsVisible } = this.state;
-    this.setState({ timeControlsVisible: !timeControlsVisible });
+  handleChangeTimerVisibility = () => {
+    const { timerVisible } = this.state;
+    this.setState({ timerVisible: !timerVisible }, () => {
+      const { timerVisible: currentTimerVisible } = this.state;
+      if (currentTimerVisible === false) {
+        const settingsToChange = {
+          headerVisible: false,
+        };
+        this.setState({ startImmediately: true });
+        this.saveSettings(settingsToChange);
+      }
+    });
   };
 
   handleChangeDirection = event => {
@@ -135,14 +144,14 @@ class Settings extends Component {
     const {
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = this.state;
     this.saveSettings({
       initialTimeValue,
       direction,
-      timeControlsVisible,
       startImmediately,
+      timerVisible,
     });
     dispatchCloseSettings();
   };
@@ -168,8 +177,8 @@ class Settings extends Component {
       initialTimeValue,
       direction,
       showError,
-      timeControlsVisible,
       startImmediately,
+      timerVisible,
     } = this.state;
 
     if (activity) {
@@ -189,6 +198,7 @@ class Settings extends Component {
       <>
         <FormControlLabel
           className={classes.formControl}
+          disabled={!timerVisible}
           control={switchControl(
             headerVisible,
             this.handleChangeHeaderVisibility,
@@ -196,28 +206,34 @@ class Settings extends Component {
           )}
           label={t('Show Header to Students')}
         />
-        <FormControlLabel
-          className={classes.formControl}
-          control={switchControl(
-            timeControlsVisible,
-            this.handleChangeTimeControlVisibility,
-            'timeControlVisibility',
-          )}
-          label={t('Show Time Controls to Students')}
-        />
         <Tooltip
           title={t(
-            'If the timer does not start automatically and there are no controls, the student will still be able to see a start button.',
+            'You can add and time student activities without displaying the timer.',
           )}
         >
           <FormControlLabel
             className={classes.formControl}
+            checked={timerVisible}
+            control={switchControl(
+              timerVisible,
+              this.handleChangeTimerVisibility,
+              'timerVisibility',
+            )}
+            label={t('Show/Hide Timer')}
+          />
+        </Tooltip>
+        <Tooltip
+          title={t('The controls are hidden when timer starts automatically')}
+        >
+          <FormControlLabel
+            className={classes.formControl}
+            disabled={!timerVisible}
             control={switchControl(
               startImmediately,
               this.handleChangeStartImmediately,
               'startImmediately',
             )}
-            label={t('Start timer automatically')}
+            label={t('Start Timer Automatically')}
           />
         </Tooltip>
         <TextField
