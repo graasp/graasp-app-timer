@@ -101,7 +101,7 @@ export const StudentView = props => {
 
           return (
             <div
-              style={{ visibility: !timerVisible ? 'visible' : 'hidden' }}
+              style={{ visibility: timerVisible ? 'visible' : 'hidden' }}
               className={classes.root}
             >
               <Grid className={classes.gridRow} container spacing={3}>

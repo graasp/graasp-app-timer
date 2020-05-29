@@ -116,7 +116,8 @@ class Settings extends Component {
   handleChangeTimerVisibility = () => {
     const { timerVisible } = this.state;
     this.setState({ timerVisible: !timerVisible }, () => {
-      if (timerVisible === false) {
+      const { timerVisible: currentTimerVisible } = this.state;
+      if (currentTimerVisible === false) {
         const settingsToChange = {
           headerVisible: false,
         };
@@ -197,7 +198,7 @@ class Settings extends Component {
       <>
         <FormControlLabel
           className={classes.formControl}
-          disabled={timerVisible}
+          disabled={!timerVisible}
           control={switchControl(
             headerVisible,
             this.handleChangeHeaderVisibility,
@@ -212,22 +213,21 @@ class Settings extends Component {
         >
           <FormControlLabel
             className={classes.formControl}
+            checked={timerVisible}
             control={switchControl(
               timerVisible,
               this.handleChangeTimerVisibility,
               'timerVisibility',
             )}
-            label={t('Hide Entire Timer From Students (stealth mode)')}
+            label={t('Show/Hide Timer')}
           />
         </Tooltip>
         <Tooltip
-          title={t(
-            'If the timer does not start automatically and there are no controls, the student will still be able to see a start button.',
-          )}
+          title={t('The controls are hidden when timer starts automatically')}
         >
           <FormControlLabel
             className={classes.formControl}
-            disabled={timerVisible}
+            disabled={!timerVisible}
             control={switchControl(
               startImmediately,
               this.handleChangeStartImmediately,

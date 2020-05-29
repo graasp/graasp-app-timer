@@ -15,13 +15,15 @@
     "Seconds": "Secondes",
     "Settings": "Paramètres",
     "Only positive numbers allowed": "Seuls les nombres positifs sont autorisés",
-    "Show Time Controls to Students": "Montrer aux élèves les commandes",
     "Show Header to Students": "Montrer l'en-tête aux étudiants.",
     "Set counter start time": "Régler l'heure de début",
     "Delete": "Delete",
     "Cancel": "Cancel",
     "Delete Time": "Supprimer le temps enregistré",
-    "": "",
-    "Actions": "Actions Possibles"
+    "Actions": "Actions Possibles",
+    "Show/Hide Timer.": "Afficher / masquer la minuterie.",
+    "Current Time (HH MM SS)": "Current Time (HH MM SS)",
+    "Student": "Student",
+    "The controls are hidden when timer starts automatically.": "Les commandes de la minuterie sont masquées lorsque la minuterie démarre automatiquement."
   }
 }

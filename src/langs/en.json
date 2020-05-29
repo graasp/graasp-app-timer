@@ -2,6 +2,27 @@
   "translations": {
     "This is the student view. Switch to the teacher view by clicking on the URL below.": "This is the student view. Switch to the teacher view by clicking on the URL below.",
     "This is the teacher view. Switch to the student view by clicking on the URL below.": "This is the teacher view. Switch to the student view by clicking on the URL below.",
-    "Welcome to the Graasp App Starter Kit": "Welcome to the Graasp App Starter Kit"
+    "Welcome to the Graasp App Starter Kit": "Welcome to the Graasp App Starter Kit",
+    "Choose Timer Type": "Choose Timer Type",
+    "Timer Type": "Timer Type",
+    "Start timer automatically": "Start timer automatically",
+    "Count Up": "Count Up",
+    "Count Down": "Count Down",
+    "Days": "Days",
+    "Hours": "Hours",
+    "Minutes": "Minutes",
+    "Seconds": "Seconds",
+    "Settings": "Settings",
+    "Only positive numbers allowed.": "Only positive numbers allowed.",
+    "Show Header to Students.": "Show Header to Students.",
+    "Set counter start time.": "Set counter start time.",
+    "Delete": "Delete",
+    "Cancel": "Cancel",
+    "Delete Time": "Delete Time",
+    "Actions": "Actions ",
+    "Show/Hide Timer": "Show/Hide Timer ",
+    "Current Time (HH MM SS)": "Current Time (HH MM SS)",
+    "Student": "Student",
+    "The controls are hidden when timer starts automatically.": "The controls are hidden when timer starts automatically."
   }
 }
