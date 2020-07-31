@@ -131,7 +131,9 @@ class Responses extends Component {
                         "By clicking 'Delete', you will be deleting student's time. This action cannot be undone.",
                       )}
                       handleClose={this.handleToggleConfirmDialog(false)}
-                      handleConfirm={() => this.handleConfirmDelete(row.appInstanceId)}
+                      handleConfirm={() =>
+                        this.handleConfirmDelete(row.appInstanceId)
+                      }
                       confirmText={t('Delete')}
                       cancelText={t('Cancel')}
                     />
