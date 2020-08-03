@@ -163,8 +163,17 @@ class Settings extends Component {
         initialTimeValue: 0,
       });
     } else {
+      const initialTimeValue = Number(value);
+      let hours = Math.floor(initialTimeValue / 60);
+      let minutes = initialTimeValue % 60;
+      hours = hours < 10 ? `0${hours}` : hours;
+      minutes = minutes < 10 ? `0${minutes}` : minutes;
+
+      const showTimeConversion = `${hours} hh : ${minutes} mm `;
+
       this.setState({
-        initialTimeValue: Number(value),
+        initialTimeValue,
+        showTimeConversion,
         showError: false,
       });
     }
@@ -177,6 +186,7 @@ class Settings extends Component {
       initialTimeValue,
       direction,
       showError,
+      showTimeConversion,
       startImmediately,
       timerVisible,
     } = this.state;
@@ -244,7 +254,7 @@ class Settings extends Component {
           label={t('Set counter start time')}
           className={clsx(classes.margin, classes.textField)}
           error={showError}
-          helperText={t('Only positive numbers allowed')}
+          helperText={showTimeConversion}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">Minutes</InputAdornment>
