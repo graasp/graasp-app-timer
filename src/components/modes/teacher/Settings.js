@@ -21,6 +21,14 @@ import {
   BACKWARD_DIRECTION,
   FORWARD_DIRECTION,
 } from '../../../config/settings';
+import {
+  HEADER_VISIBILITY_SWITCH_ID,
+  INITIAL_TIME_VALUE_TEXTFIELD_ID,
+  START_TIMER_AUTOMATICALLY_SWITCH_ID,
+  TIMER_VISIBILITY_SWITCH_ID,
+  DIRECTION_BACKWARD_RADIO_ID,
+  DIRECTION_FORWARD_RADIO_ID,
+} from '../../../constants/selectors';
 
 function getModalStyle() {
   const top = 50;
@@ -119,7 +127,7 @@ class Settings extends Component {
       const { timerVisible: currentTimerVisible } = this.state;
       if (currentTimerVisible === false) {
         const settingsToChange = {
-          headerVisible: false,
+          timerVisible: false,
         };
         this.setState({ startImmediately: true });
         this.saveSettings(settingsToChange);
@@ -195,8 +203,9 @@ class Settings extends Component {
       return <Loader />;
     }
 
-    const switchControl = (checked, onChange, value) => (
+    const switchControl = ({ id, checked, onChange, value }) => (
       <Switch
+        id={id}
         color="primary"
         checked={checked}
         onChange={onChange}
@@ -209,11 +218,12 @@ class Settings extends Component {
         <FormControlLabel
           className={classes.formControl}
           disabled={!timerVisible}
-          control={switchControl(
-            headerVisible,
-            this.handleChangeHeaderVisibility,
-            'headerVisibility',
-          )}
+          control={switchControl({
+            id: HEADER_VISIBILITY_SWITCH_ID,
+            checked: headerVisible,
+            onChange: this.handleChangeHeaderVisibility,
+            value: 'headerVisibility',
+          })}
           label={t('Show Header to Students')}
         />
         <Tooltip
@@ -224,11 +234,12 @@ class Settings extends Component {
           <FormControlLabel
             className={classes.formControl}
             checked={timerVisible}
-            control={switchControl(
-              timerVisible,
-              this.handleChangeTimerVisibility,
-              'timerVisibility',
-            )}
+            control={switchControl({
+              id: TIMER_VISIBILITY_SWITCH_ID,
+              checked: timerVisible,
+              onChange: this.handleChangeTimerVisibility,
+              value: 'timerVisibility',
+            })}
             label={t('Show/Hide Timer')}
           />
         </Tooltip>
@@ -238,18 +249,19 @@ class Settings extends Component {
           <FormControlLabel
             className={classes.formControl}
             disabled={!timerVisible}
-            control={switchControl(
-              startImmediately,
-              this.handleChangeStartImmediately,
-              'startImmediately',
-            )}
+            control={switchControl({
+              id: START_TIMER_AUTOMATICALLY_SWITCH_ID,
+              checked: startImmediately,
+              onChange: this.handleChangeStartImmediately,
+              value: 'startImmediately',
+            })}
             label={t('Start Timer Automatically')}
           />
         </Tooltip>
         <TextField
           type="Number"
           value={initialTimeValue}
-          id="initialTimeValue"
+          id={INITIAL_TIME_VALUE_TEXTFIELD_ID}
           onChange={this.handleChangeInitialTimeValue}
           label={t('Set counter start time')}
           className={clsx(classes.margin, classes.textField)}
@@ -257,7 +269,7 @@ class Settings extends Component {
           helperText={showTimeConversion}
           InputProps={{
             endAdornment: (
-              <InputAdornment position="end">Minutes</InputAdornment>
+              <InputAdornment position="end">{t('Minutes')}</InputAdornment>
             ),
           }}
           variant="outlined"
@@ -274,11 +286,13 @@ class Settings extends Component {
             onChange={this.handleChangeDirection}
           >
             <FormControlLabel
+              id={DIRECTION_BACKWARD_RADIO_ID}
               value={BACKWARD_DIRECTION}
               control={<Radio color="primary" />}
               label={t('Count Down')}
             />
             <FormControlLabel
+              id={DIRECTION_FORWARD_RADIO_ID}
               value={FORWARD_DIRECTION}
               control={<Radio color="primary" />}
               label={t('Count Up')}
@@ -311,13 +325,11 @@ class Settings extends Component {
   }
 }
 
-const mapStateToProps = ({ layout, appInstance }) => {
-  return {
-    open: layout.settings.open,
-    settings: appInstance.content.settings,
-    activity: Boolean(appInstance.activity.length),
-  };
-};
+const mapStateToProps = ({ layout, appInstance }) => ({
+  open: layout.settings.open,
+  settings: appInstance.content.settings,
+  activity: Boolean(appInstance.activity.length),
+});
 
 const mapDispatchToProps = {
   dispatchCloseSettings: closeSettings,

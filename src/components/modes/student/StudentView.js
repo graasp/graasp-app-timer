@@ -18,7 +18,15 @@ import {
   patchAppInstanceResource,
   postAppInstanceResource,
 } from '../../../actions';
-import { TIME } from '../../../config/appInstanceResourceTypes';
+import { APP_INSTANCE_RESOURCE_TIME } from '../../../config/appInstanceResourceTypes';
+import {
+  COUNTER_MINUTE_ID,
+  COUNTER_HOUR_ID,
+  COUNTER_SECOND_ID,
+  PLAY_PAUSE_COUNTER_BUTTON_ID,
+  PAUSE_COUNTER_ICON_ID,
+  PLAY_COUNTER_ICON_ID,
+} from '../../../constants/selectors';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -90,7 +98,7 @@ export const StudentView = props => {
               dispatchPostAppInstanceResource({
                 data: timeInMillis,
                 userId,
-                type: TIME,
+                type: APP_INSTANCE_RESOURCE_TIME,
               });
             }
           }
@@ -115,15 +123,18 @@ export const StudentView = props => {
                   >
                     {currentHour > TIME_ZERO && (
                       <Counter
+                        id={COUNTER_HOUR_ID}
                         timeValue={<Timer.Hours />}
                         timeUnit={t('Hours')}
                       />
                     )}
                     <Counter
+                      id={COUNTER_MINUTE_ID}
                       timeValue={<Timer.Minutes />}
                       timeUnit={t('Minutes')}
                     />
                     <Counter
+                      id={COUNTER_SECOND_ID}
                       timeValue={<Timer.Seconds />}
                       timeUnit={t('Seconds')}
                     />
@@ -132,6 +143,7 @@ export const StudentView = props => {
                 <Grid item xs={12} align="center">
                   {!startImmediately && (
                     <IconButton
+                      id={PLAY_PAUSE_COUNTER_BUTTON_ID}
                       aria-label="Start"
                       color="primary"
                       fontSize="large"
@@ -144,7 +156,11 @@ export const StudentView = props => {
                         handleStart();
                       }}
                     >
-                      {started ? <PauseIcon /> : <PlayArrowIcon />}
+                      {started ? (
+                        <PauseIcon id={PAUSE_COUNTER_ICON_ID} />
+                      ) : (
+                        <PlayArrowIcon id={PLAY_COUNTER_ICON_ID} />
+                      )}
                     </IconButton>
                   )}
                 </Grid>
@@ -191,9 +207,10 @@ const mapStateToProps = ({ appInstance, appInstanceResources, context }) => {
     startImmediately: appInstance.content.settings.startImmediately,
     tool,
     userId,
-    timeResource: appInstanceResources.content.find(({ user, type }) => {
-      return user === userId && type === TIME;
-    }),
+    timeResource: appInstanceResources.content.find(
+      ({ user, type }) =>
+        user === userId && type === APP_INSTANCE_RESOURCE_TIME,
+    ),
   };
 };
 

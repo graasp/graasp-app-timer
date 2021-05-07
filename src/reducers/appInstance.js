@@ -8,14 +8,14 @@ import {
   FLAG_GETTING_APP_INSTANCE,
 } from '../types';
 import { showErrorToast } from '../utils/toasts';
-import { DEFAULT_DIRECTION } from '../config/settings';
+import { DEFAULT_DIRECTION, DEFAULT_TIMER_VISIBLE } from '../config/settings';
 
 const DEFAULT_SETTINGS = {
   headerVisible: false,
   initialTimeValue: 0,
   direction: DEFAULT_DIRECTION,
   startImmediately: false,
-  timerVisible: true,
+  timerVisible: DEFAULT_TIMER_VISIBLE,
 };
 
 const INITIAL_STATE = {
