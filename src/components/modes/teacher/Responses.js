@@ -5,15 +5,16 @@ import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import { Delete as DeleteIcon } from '@material-ui/icons';
 import TableCell from '@material-ui/core/TableCell';
 import TableBody from '@material-ui/core/TableBody';
 import { withTranslation } from 'react-i18next';
 import { withStyles } from '@material-ui/core/styles';
 import PropTypes from 'prop-types';
-import IconButton from '@material-ui/core/IconButton';
-import ConfirmDialog from '../../common/ConfirmDialog';
-import { deleteAppInstanceResource } from '../../../actions';
+import {
+  buildResponseTableRowId,
+  RESPONSES_TABLE_ID,
+} from '../../../constants/selectors';
+import DeleteButton from './DeleteButton';
 
 class Responses extends Component {
   static styles = theme => ({
@@ -27,13 +28,8 @@ class Responses extends Component {
     },
   });
 
-  state = {
-    confirmDialogOpen: false,
-  };
-
   static propTypes = {
     t: PropTypes.func.isRequired,
-    dispatchDeleteAppInstanceResource: PropTypes.func.isRequired,
     userContent: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string,
@@ -51,18 +47,6 @@ class Responses extends Component {
       root: PropTypes.string,
       table: PropTypes.string,
     }).isRequired,
-  };
-
-  handleToggleConfirmDialog = open => () => {
-    this.setState({
-      confirmDialogOpen: open,
-    });
-  };
-
-  handleConfirmDelete = id => {
-    const { dispatchDeleteAppInstanceResource } = this.props;
-    dispatchDeleteAppInstanceResource(id);
-    this.handleToggleConfirmDialog(false)();
   };
 
   // takes millis and outputs hh:mm:ss
@@ -87,16 +71,18 @@ class Responses extends Component {
       appInstanceResources,
       userContent,
     } = this.props;
-    const { confirmDialogOpen } = this.state;
 
-    const usersTimeData = appInstanceResources.map(({ user, data, _id }) => ({
-      userId: user,
-      time: data,
-      appInstanceId: _id,
-    }));
+    const usersTimeData = appInstanceResources.map(
+      ({ user, data, _id, appInstance: appInstanceId }) => ({
+        userId: user,
+        time: data,
+        appInstanceId,
+        _id,
+      }),
+    );
 
     return (
-      <div>
+      <div id={RESPONSES_TABLE_ID}>
         <Paper className={classes.root}>
           <Table className={classes.table}>
             <TableHead>
@@ -108,34 +94,21 @@ class Responses extends Component {
             </TableHead>
             <TableBody>
               {usersTimeData.map((row, index) => (
-                <TableRow key={String(index)}>
+                <TableRow
+                  id={buildResponseTableRowId(row?._id)}
+                  key={String(index)}
+                >
                   <TableCell align="left">
-                    {userContent.length &&
-                      userContent.find(({ id }) => id === row.userId).name}
+                    {userContent?.find(({ id }) => id === row.userId)?.name ||
+                      t('Unknown')}
                   </TableCell>
                   <TableCell align="left">
                     {this.formatTime(row.time)}
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton
-                      color="primary"
-                      onClick={this.handleToggleConfirmDialog(true)}
+                    <DeleteButton
+                      id={row._id}
                       disabled={_.isEmpty(userContent)}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                    <ConfirmDialog
-                      open={confirmDialogOpen}
-                      title={t('Delete Time')}
-                      text={t(
-                        "By clicking 'Delete', you will be deleting student's time. This action cannot be undone.",
-                      )}
-                      handleClose={this.handleToggleConfirmDialog(false)}
-                      handleConfirm={() =>
-                        this.handleConfirmDelete(row.appInstanceId)
-                      }
-                      confirmText={t('Delete')}
-                      cancelText={t('Cancel')}
                     />
                   </TableCell>
                 </TableRow>
@@ -148,23 +121,13 @@ class Responses extends Component {
   }
 }
 
-const mapStateToProps = ({ appInstance, appInstanceResources, users }) => {
-  return {
-    settings: appInstance.content.settings,
-    appInstanceResources: appInstanceResources.content,
-    userContent: users.content,
-  };
-};
-
-const mapDispatchToProps = {
-  dispatchDeleteAppInstanceResource: deleteAppInstanceResource,
-};
-
+const mapStateToProps = ({ appInstance, appInstanceResources, users }) => ({
+  settings: appInstance.content.settings,
+  appInstanceResources: appInstanceResources.content,
+  userContent: users.content,
+});
 const StyledComponent = withStyles(Responses.styles)(Responses);
 
 const TranslatedComponent = withTranslation()(StyledComponent);
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(TranslatedComponent);
+export default connect(mapStateToProps)(TranslatedComponent);

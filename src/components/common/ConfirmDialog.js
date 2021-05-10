@@ -16,6 +16,7 @@ const ConfirmDialog = props => {
     text,
     confirmText,
     cancelText,
+    confirmTextId,
   } = props;
   return (
     <div>
@@ -40,7 +41,7 @@ const ConfirmDialog = props => {
           >
             {cancelText}
           </Button>
-          <Button onClick={handleConfirm} color="primary">
+          <Button id={confirmTextId} onClick={handleConfirm} color="primary">
             {confirmText}
           </Button>
         </DialogActions>
@@ -57,11 +58,13 @@ ConfirmDialog.propTypes = {
   text: PropTypes.string,
   confirmText: PropTypes.string,
   cancelText: PropTypes.string,
+  confirmTextId: PropTypes.string,
 };
 
 ConfirmDialog.defaultProps = {
   text: '',
   confirmText: 'OK',
+  confirmTextId: null,
   cancelText: 'Cancel',
 };
 

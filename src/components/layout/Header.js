@@ -7,6 +7,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import { withStyles } from '@material-ui/core/styles';
 import { withTranslation } from 'react-i18next';
 import { ReactComponent as Logo } from '../../resources/logo.svg';
+import { HEADER_ID } from '../../constants/selectors';
 
 class Header extends Component {
   static propTypes = {
@@ -33,7 +34,7 @@ class Header extends Component {
   render() {
     const { t, classes } = this.props;
     return (
-      <header>
+      <header id={HEADER_ID}>
         <AppBar position="static">
           <Toolbar>
             <Logo className={classes.logo} />

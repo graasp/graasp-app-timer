@@ -8,6 +8,19 @@
       "item": "2356e70ab2530200333634a2",
       "createdAt": "2019-01-01T00:00:00.000Z",
       "updatedAt": "2019-01-01T00:00:00.000Z"
+    },
+    {
+      "_id": "db-with-settings",
+      "settings": {
+        "headerVisible": true,
+        "initialTimeValue": 20,
+        "direction": "backward",
+        "timerVisible": true,
+        "startImmediately": true
+      },
+      "item": "2356e70ab2530200333634a2",
+      "createdAt": "2019-01-01T00:00:00.000Z",
+      "updatedAt": "2019-01-01T00:00:00.000Z"
     }
   ],
   "spaces": [

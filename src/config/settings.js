@@ -27,3 +27,4 @@ export const BACKWARD_DIRECTION = 'backward';
 export const DEFAULT_DIRECTION = FORWARD_DIRECTION;
 
 export const SAVE_FREQUENCY_IN_SECONDS = 10;
+export const DEFAULT_TIMER_VISIBLE = true;

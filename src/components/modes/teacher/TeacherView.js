@@ -16,6 +16,7 @@ import {
 } from '../../../actions';
 import Settings from './Settings';
 import Responses from './Responses';
+import { SETTINGS_FAB_BUTTON_ID } from '../../../constants/selectors';
 
 /**
  * helper method to render the rows of the app instance resource table
@@ -95,6 +96,7 @@ export class TeacherView extends Component {
         </Grid>
         <Settings />
         <Fab
+          id={SETTINGS_FAB_BUTTON_ID}
           color="primary"
           aria-label={t('Settings')}
           className={classes.fab}
